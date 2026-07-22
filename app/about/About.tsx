@@ -4,7 +4,7 @@ export default function About() {
   return (
     <section className="flex h-[70vh] items-center justify-between gap-16 px-10">
       {/* Title (right) — stronger parallax */}
-      <Parallax speed={120} className="shrink-0">
+      <Parallax speed={200} className="shrink-0">
         <h2 className="font-palestine text-[7.5rem] leading-[1.4] text-text">
           صُنع في فلسطين،
           <br />
@@ -13,7 +13,7 @@ export default function About() {
       </Parallax>
 
       {/* Paragraph (left) — lighter parallax */}
-      <Parallax speed={50} className="max-w-[48rem]">
+      <Parallax speed={90} className="max-w-[48rem]">
         <p className="font-neo text-[1.5rem] leading-[1.4] text-text">
           تأسست &quot;ازدهار فلسطين للأعلاف&quot; في الخليل عام 2021، وبنينا في
           <br />
