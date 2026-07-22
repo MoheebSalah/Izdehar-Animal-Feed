@@ -10,6 +10,7 @@
 - Tailwind only.
 - Don't use inline styles.
 - Keep class names readable.
+- all texts has line hieght 140%
 
 ## Colors :
 - Primary : #009147
