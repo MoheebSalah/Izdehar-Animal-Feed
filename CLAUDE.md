@@ -34,8 +34,6 @@ Fix typescript errors before finishing.
 - each section's height must fill the screen height.
 - When i give you measures in px, make sure they are responsive for other desktop devices.
 - the font size must be in rem, so it is responsive for all desktop screens.
-
-### Font measure :
 - The landing page im building is from a figma design, so it is desigend for a specefic device screen, it is MacBook Pro 16" (1728*1117). 
 - To be accurate in the rem value, i will give you the font size in pixels, and you will measure it according to the screen size the figma design is designed for.
 
