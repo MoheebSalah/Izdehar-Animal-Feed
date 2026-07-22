@@ -1,26 +1,29 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand colors */
+  --color-primary: #009147;
+  --color-secondary: #ffc73a;
+  --color-text: #000f07;
+  --color-subtext: #5d6d65;
+  --color-light: #84908a;
+  --color-muted: #a6a7a7;
+
+  /* Fonts (values injected by next/font/local in layout.tsx) */
+  --font-palestine: var(--font-palestine);
+  --font-neo: var(--font-neo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/*
+  Root font-size scales with the viewport so every `rem` stays proportional
+  across desktop screens. 1rem = 16px on the 1728px Figma design width
+  (1728 / 16 = 108).
+*/
+html {
+  font-size: calc(100vw / 108);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-text);
 }
