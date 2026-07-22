@@ -27,7 +27,7 @@ export default function ProductCard({
       </div>
       <div className="flex items-end justify-between gap-6 px-8 pb-8">
         <h3 className="font-neo text-[1.5rem] font-bold text-text">{title}</h3>
-        <p className="max-w-[13rem] font-neo text-[1rem] leading-[1.5] text-subtext">
+        <p className="max-w-36 text-left font-neo text-[1rem] leading-[1.5] text-text">
           {description}
         </p>
       </div>
