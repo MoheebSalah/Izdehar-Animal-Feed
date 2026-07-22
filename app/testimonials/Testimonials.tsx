@@ -72,12 +72,12 @@ export default function Testimonials() {
           <img
             src="/svgs/”.svg"
             alt=""
-            className="pointer-events-none absolute right-[7rem] top-[2rem] w-[11rem]"
+            className="pointer-events-none absolute right-[7rem] top-0 w-[17rem]"
           />
           <img
             src="/svgs/“.svg"
             alt=""
-            className="pointer-events-none absolute bottom-[3rem] left-[5rem] w-[12rem]"
+            className="pointer-events-none absolute bottom-0 left-0 w-[19rem]"
           />
 
           {/* Quote text */}
