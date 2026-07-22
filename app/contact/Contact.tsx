@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Contact() {
   return (
-    <section className="flex h-screen items-center px-10">
+    <section className="flex  items-center px-10">
       <div className="w-full rounded-[2rem] bg-white p-[3rem] shadow-sm">
         {/* Title */}
         <h2 className="text-right font-palestine text-[3rem] leading-[1.2] text-text">
