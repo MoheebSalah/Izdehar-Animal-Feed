@@ -10,7 +10,7 @@
 - Tailwind only.
 - Don't use inline styles.
 - Keep class names readable.
-- all texts has line hieght 140%
+- all texts has line hieght 140%, which means class "leading-[1.4]" 
 
 ## Colors :
 - Primary : #009147

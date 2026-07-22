@@ -2,7 +2,7 @@ export default function About() {
   return (
     <section className="flex h-screen items-center justify-between gap-16 px-10">
       {/* Title (right) */}
-      <h2 className="shrink-0  font-palestine text-[7.5rem] leading-[1.15] text-text">
+      <h2 className="shrink-0  font-palestine text-[7.5rem] leading-[1.4] text-text">
         صُنع في فلسطين،
         <br />
         لأجل فلسطين
