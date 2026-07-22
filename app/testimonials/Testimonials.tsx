@@ -49,7 +49,7 @@ export default function Testimonials() {
                 type="button"
                 onClick={() => setSelected(i)}
                 className={`relative min-h-0 w-full overflow-hidden rounded-3xl transition-all duration-300 ${
-                  isActive ? "flex-[2]" : "flex-[1]"
+                  isActive ? "flex-[2]" : "flex-[1] cursor-pointer"
                 }`}
               >
                 <Image
