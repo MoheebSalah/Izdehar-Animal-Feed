@@ -2,17 +2,17 @@ import Image from "next/image";
 
 export default function Contact() {
   return (
-    <section className="flex h-screen items-center px-10">
-      <div className="w-full rounded-[2rem] bg-white p-[3rem] shadow-sm">
+    <section className="flex h-[80vh] items-center px-10">
+      <div className="w-full rounded-[2rem] bg-white p-[3rem] ">
         {/* Title */}
-        <h2 className="text-right font-palestine text-[3rem] leading-[1.2] text-text">
+        <h2 className="text-right font-palestine text-[4.5rem] leading-[1.2] text-text">
           اسأل مختصينا
         </h2>
 
         {/* Row: map on the right, form on the left (RTL: first child = right) */}
-        <div className="mt-[2.5rem] flex items-stretch gap-[3rem]">
-          {/* Map */}
-          <div className="relative min-h-[30rem] flex-1 overflow-hidden rounded-[1.5rem]">
+        <div className="mt-[2.5rem] flex gap-[3rem]">
+          {/* Map — 0.75 of the section height */}
+          <div className="relative h-[60vh] flex-1 overflow-hidden rounded-[1.5rem]">
             <Image
               src="/photos/map_placeholder.png"
               alt="موقع مصنع ازدهار على الخريطة"
@@ -22,47 +22,47 @@ export default function Contact() {
             />
           </div>
 
-          {/* Form */}
-          <form className="flex flex-1 flex-col">
+          {/* Form — same height as the map, top & bottom aligned with it */}
+          <form className="flex h-[60vh] flex-1 flex-col">
             {/* Name fields */}
             <div className="grid grid-cols-2 gap-5">
               <div>
-                <label className="mb-2 block text-right font-neo text-[1.125rem] text-text">
+                <label className="mb-2 block text-right font-neo text-[1.5rem] font-semibold text-text">
                   الاسم الأول
                 </label>
                 <input
                   type="text"
                   placeholder="مثال: خالد"
-                  className="w-full rounded-xl border border-black/5 bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
+                  className="w-full rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-right font-neo text-[1.125rem] text-text">
+                <label className="mb-2 block text-right font-neo text-[1.5rem] font-semibold text-text">
                   اسم العائلة
                 </label>
                 <input
                   type="text"
                   placeholder="مثال: القواسمي"
-                  className="w-full rounded-xl border border-black/5 bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
+                  className="w-full rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
                 />
               </div>
             </div>
 
-            {/* Message */}
-            <div className="mt-5">
-              <label className="mb-2 block text-right font-neo text-[1.125rem] text-text">
+            {/* Message — grows to fill the space between the fields and the contacts */}
+            <div className="mt-5 flex flex-1 flex-col">
+              <label className="mb-2 block text-right font-neo text-[1.5rem] font-semibold text-text">
                 الرسالة
               </label>
               <textarea
                 placeholder="احكِ لنا عن مزرعتك وشو بتحتاج..."
-                className="h-[12rem] w-full resize-none rounded-xl border border-black/5 bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
+                className="w-full flex-1 resize-none rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
               />
             </div>
 
             {/* Submit */}
             <button
               type="submit"
-              className="mt-5 flex w-full items-center justify-center gap-3 rounded-xl bg-text py-4 font-neo text-[1.125rem] text-white"
+              className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-text py-4 font-neo text-[1.125rem] text-white"
             >
               أرسل رسالتك
               <svg
@@ -78,10 +78,12 @@ export default function Contact() {
               </svg>
             </button>
 
-            {/* Contact info */}
-            <div className="mt-[2.5rem] space-y-4">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2 font-neo text-[1.125rem] text-text">
+            {/* Contact info — grid mirrors the name fields, so the phone/mobile
+                column starts where the "اسم العائلة" field starts */}
+            <div className="mt-auto grid grid-cols-2 gap-5 pt-[2.5rem]">
+              {/* Right column */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-text">
                   <img
                     src="/svgs/location.svg"
                     alt=""
@@ -89,17 +91,7 @@ export default function Contact() {
                   />
                   <span>ترقوميا، الخليل، فلسطين</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.125rem] text-text">
-                  <img
-                    src="/svgs/phone.svg"
-                    alt=""
-                    className="h-[1.25rem] w-auto"
-                  />
-                  <span dir="ltr">+972 2 22233222</span>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2 font-neo text-[1.125rem] text-text">
+                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-text">
                   <img
                     src="/svgs/mail.svg"
                     alt=""
@@ -107,7 +99,18 @@ export default function Contact() {
                   />
                   <span dir="ltr">info@izdeharanimal.ps</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.125rem] text-text">
+              </div>
+              {/* Left column */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-text">
+                  <img
+                    src="/svgs/phone.svg"
+                    alt=""
+                    className="h-[1.25rem] w-auto"
+                  />
+                  <span dir="ltr">+972 2 22233222</span>
+                </div>
+                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-text">
                   <img
                     src="/svgs/mobile.svg"
                     alt=""

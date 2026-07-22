@@ -10,7 +10,7 @@ type GalleryImageProps = {
 export default function GalleryImage({ src, alt, className }: GalleryImageProps) {
   return (
     <div
-      className={`absolute overflow-hidden rounded-[1.25rem] shadow-xl ${className ?? ""}`}
+      className={`absolute overflow-hidden rounded-[1.25rem] ${className ?? ""}`}
     >
       <Image src={src} alt={alt} fill sizes="50vw" className="object-cover" />
     </div>

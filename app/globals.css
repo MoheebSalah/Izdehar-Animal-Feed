@@ -27,3 +27,12 @@ body {
   background: #f4f4f4;
   color: var(--color-text);
 }
+
+/* Hide scrollbar while keeping horizontal scroll (e.g. product carousel) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

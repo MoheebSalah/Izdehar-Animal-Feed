@@ -16,7 +16,7 @@ export default function Hero() {
       {/* Heading (left) + paragraph (right). In RTL the first child sits on
           the right, so the paragraph comes first and the heading second. */}
       <div className="flex flex-1 items-end justify-between gap-12 px-10 pb-8">
-        <p className="max-w-[43rem] font-neo text-[1.25rem] leading-[1.4] text-text">
+        <p className="max-w-[43rem] font-neo text-[1.25rem]  leading-[1.4] text-text">
           من مصنعنا في ترقوميا، أكبر مصنع أعلاف في فلسطين، نصنع لمزارعكم علفًا
           متوازنًا
           <br />
