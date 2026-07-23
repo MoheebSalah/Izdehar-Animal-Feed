@@ -18,7 +18,7 @@ export default function CTA() {
           اطلب عينة، أو خذ استشارة مجانية من مختصي التغذية عندنا أو تعال زور
           المصنع بترقوميا وشوف بعينك من وين بيجي علف مزرعتك.
         </p>
-        <button className="mt-2 w-[16rem] rounded-xl bg-white py-3 font-neo text-[1.125rem] text-text">
+        <button className="mt-2 w-[16rem] cursor-pointer rounded-xl bg-white py-3 font-neo text-[1.125rem] text-text transition-transform duration-300 hover:scale-[1.05]">
           ابدأ اليوم
         </button>
       </div>

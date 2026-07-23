@@ -62,20 +62,35 @@ export default function Contact() {
             {/* Submit */}
             <button
               type="submit"
-              className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-text py-4 font-neo text-[1.125rem] text-white"
+              className="group mt-5 flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-text py-4 font-neo text-[1.125rem] text-white transition-transform duration-300 hover:scale-[1.03]"
             >
               أرسل رسالتك
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-[1.1rem] w-[1.1rem]"
-              >
-                <path d="M17 17L7 7M7 7H15M7 7V15" />
-              </svg>
+              {/* Two arrows in a mask: the current one flies out toward the top-left
+                  while a fresh one slides in from the bottom-right */}
+              <span className="relative block h-[1.4rem] w-[1.4rem] overflow-hidden">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="absolute inset-0 h-full w-full transition-transform duration-300 group-hover:-translate-x-full group-hover:-translate-y-full"
+                >
+                  <path d="M19 19L5 5M5 5H14M5 5V14" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="absolute inset-0 h-full w-full translate-x-full translate-y-full transition-transform duration-300 group-hover:translate-x-0 group-hover:translate-y-0"
+                >
+                  <path d="M19 19L5 5M5 5H14M5 5V14" />
+                </svg>
+              </span>
             </button>
 
             {/* Contact info — grid mirrors the name fields, so the phone/mobile

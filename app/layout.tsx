@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "lenis/dist/lenis.css";
+import SmoothScroll from "./components/SmoothScroll";
+import LoadingScreen from "./components/LoadingScreen";
 
 const palestine = localFont({
   src: "../public/fonts/alfont_com_Palestine-Regular.ttf",
@@ -30,7 +33,12 @@ export default function RootLayout({
       dir="rtl"
       className={`${palestine.variable} ${neoSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <SmoothScroll>
+          <LoadingScreen />
+          {children}
+        </SmoothScroll>
+      </body>
     </html>
   );
 }
