@@ -3,7 +3,7 @@ import Parallax from "../components/Parallax";
 
 export default function Gallery() {
   return (
-    <section className="relative h-[46rem] w-full overflow-hidden md:h-[122rem]">
+    <section className="relative h-[46rem] w-full overflow-visible md:h-[122rem]">
       {/* Desktop collage — authored on a 108rem-wide canvas (= 100vw at the
           design scale). Hidden on mobile, which gets its own layout below. */}
       <div className="absolute left-0 top-0 hidden h-[122rem] w-[108rem] md:block">
@@ -58,7 +58,7 @@ export default function Gallery() {
         alt="يدان تحملان حبيبات العلف"
         rotation={-13.3}
         speed={130}
-        className="left-[8.2rem] top-[87rem] h-[25rem] w-[22rem] z-10"
+        className="left-[8.2rem] top-[87rem] h-[25rem] w-[22rem] z-10 "
       />
 
       {/* Factory building — bottom right, portrait (large, light effect) */}
@@ -102,20 +102,21 @@ export default function Gallery() {
           className="right-[0.5rem] top-[3rem] h-[8rem] w-[11rem] z-20"
         />
 
-        {/* Flanking the title */}
+        {/* Above the title, second row — kept clear of the title text, which is
+            wide and centred, so they sit in the gap between the top row and it */}
         <GalleryImage
           src="/assets/Image Gallery/Image 4.webp"
           alt="مختبر الجودة في مصنع ازدهار"
-          rotation={12}
+          rotation={8}
           speed={60}
-          className="left-[0.5rem] top-[16.5rem] h-[7.5rem] w-[10rem] z-20"
+          className="left-[0.5rem] top-[12rem] h-[6rem] w-[9.5rem] z-20"
         />
         <GalleryImage
           src="/assets/Image Gallery/Image 1.webp"
           alt="حبيبات العلف تنسكب"
           rotation={-7}
           speed={35}
-          className="right-[0.5rem] top-[25.5rem] h-[8.5rem] w-[10rem] z-20"
+          className="right-[0.5rem] top-[12rem] h-[6.5rem] w-[9.5rem] z-20"
         />
 
         {/* Below the title */}

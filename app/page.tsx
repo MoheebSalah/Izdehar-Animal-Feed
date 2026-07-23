@@ -16,8 +16,10 @@ export default function Home() {
       <Gallery />
       <Testimonials />
       <Contact />
-      {/* CTA + footer share one screen on desktop; stack naturally on mobile */}
-      <div className="flex flex-col md:h-screen">
+      {/* CTA + footer share one screen on desktop; stack naturally on mobile.
+          The footer slides out from behind the CTA, which sits on top; the
+          wrapper clips whatever hasn't emerged yet. */}
+      <div className="relative flex flex-col overflow-hidden md:h-screen">
         <CTA />
         <Footer />
       </div>
