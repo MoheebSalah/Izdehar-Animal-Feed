@@ -11,6 +11,12 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
 
   useEffect(() => {
+    // Always start at the top on refresh — disable the browser's scroll restoration.
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+
     // Drive Lenis from GSAP's ticker so smooth scroll and ScrollTrigger stay in sync.
     function update(time: number) {
       lenisRef.current?.lenis?.raf(time * 1000);

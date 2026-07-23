@@ -21,6 +21,12 @@
 */
 html {
   font-size: calc(100vw / 108);
+  /* Hide the page scrollbar while keeping scroll functional */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / old Edge */
+}
+html::-webkit-scrollbar {
+  display: none; /* Chrome / Safari / Edge */
 }
 
 body {
