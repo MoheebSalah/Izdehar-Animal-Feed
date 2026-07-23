@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const testimonials = [
   {
@@ -30,6 +32,19 @@ const testimonials = [
 export default function Testimonials() {
   const [selected, setSelected] = useState(0);
   const active = testimonials[selected];
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Fade the quote + name in each time the selection changes.
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        "[data-fade]",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.08 }
+      );
+    },
+    { dependencies: [selected], scope: cardRef }
+  );
 
   return (
     <section className="flex h-screen flex-col gap-16 px-10 py-12">
@@ -57,8 +72,10 @@ export default function Testimonials() {
                   alt={t.name}
                   fill
                   sizes="25rem"
-                  className={`object-cover object-[50%_35%] transition duration-300 ${
-                    isActive ? "" : "brightness-75 hover:brightness-100"
+                  className={`object-cover object-[50%_35%] origin-[50%_35%] transition-all duration-300 ease-out ${
+                    isActive
+                      ? "scale-[1.15]"
+                      : "brightness-60 hover:brightness-90"
                   }`}
                 />
               </button>
@@ -67,7 +84,10 @@ export default function Testimonials() {
         </div>
 
         {/* Quote card */}
-        <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] bg-white px-[5rem] py-[4rem]">
+        <div
+          ref={cardRef}
+          className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] bg-white px-[5rem] py-[4rem]"
+        >
           {/* Decorative quotation marks */}
           <img
             src="/svgs/”.svg"
@@ -82,13 +102,16 @@ export default function Testimonials() {
 
           {/* Quote text */}
           <div className="relative z-10 flex flex-1 items-center">
-            <p className=" text-right font-neo text-[3.5rem] font-bold leading-[1.4] text-text">
+            <p
+              data-fade
+              className=" text-right font-neo text-[3.5rem] font-bold leading-[1.4] text-text"
+            >
               {active.quote}
             </p>
           </div>
 
           {/* Name + role */}
-          <div className="relative z-10 text-right">
+          <div data-fade className="relative z-10 text-right">
             <p className="font-neo text-[2rem] font-bold text-text">
               {active.name}
             </p>
