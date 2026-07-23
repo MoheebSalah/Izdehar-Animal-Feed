@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useLenis } from "lenis/react";
 
 const links = [
-  { label: "من نحن", target: "#about" },
   { label: "منتجاتنا", target: "#products" },
+  { label: "من نحن", target: "#about" },
   { label: "عملاؤنا", target: "#testimonials" },
   { label: "تواصل معنا", target: "#contact" },
 ];
@@ -54,9 +54,19 @@ export default function Navbar() {
           : "translate-y-0 opacity-100"
       }`}
     >
+      {/* Legibility scrim: a frosted "glassmorphism" pane — a strong, saturated
+          backdrop blur (no tint) that drops from the top and fades out downward,
+          sitting BEHIND the nav content (‑z‑10) so the logo stays legible over
+          any background. pointer-events-none keeps it purely visual — it never
+          blocks clicks or scrolling of the page. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[8rem] backdrop-blur-xl backdrop-saturate-150 [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)] [mask-image:linear-gradient(to_bottom,black,transparent)]"
+      />
+
       <nav className="flex items-center justify-between px-6 py-4 md:px-10 md:py-6">
         {/* Right side (RTL): desktop links box */}
-        <div className="hidden items-center gap-6 rounded-xl bg-white px-6 py-3 shadow-[0_10px_40px_rgba(0,15,7,0.08)] md:flex">
+        <div className="hidden items-center gap-6 rounded-xl bg-white px-6 py-2 shadow-[0_10px_40px_rgba(0,15,7,0.08)] md:flex">
           {links.map((l) => (
             <button
               key={l.target}

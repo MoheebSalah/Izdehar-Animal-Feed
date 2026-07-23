@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 type ProductCardProps = {
   image: string;
@@ -10,6 +10,13 @@ type ProductCardProps = {
   varieties: { code: string; name: string }[];
   /** Mobile only: the centered card in the carousel shows the hover background. */
   isActive?: boolean;
+  /** Whether this card is the (single) expanded one — owned by the parent so
+      opening one card closes any other. */
+  expanded?: boolean;
+  /** Open this card. */
+  onExpand?: () => void;
+  /** Close this card. */
+  onCollapse?: () => void;
   /** Mobile only: a horizontal swipe over the open list moves the carousel
       (+1 = next card, -1 = previous). */
   onSwipe?: (dir: number) => void;
@@ -21,10 +28,11 @@ export default function ProductCard({
   description,
   varieties,
   isActive = false,
+  expanded = false,
+  onExpand,
+  onCollapse,
   onSwipe,
 }: ProductCardProps) {
-  const [expanded, setExpanded] = useState(false);
-
   // Mobile: the list is a vertical scroller, which the browser also makes a
   // horizontal scroll container — so it swallows left/right swipes instead of
   // passing them to the carousel. We detect a horizontal swipe ourselves and
@@ -45,22 +53,6 @@ export default function ProductCard({
       onSwipe?.(dx < 0 ? 1 : -1);
     }
   };
-
-  // Mobile: collapse the card when it is swiped away from (no longer centered).
-  // Handled during render (comparing against the previous prop) rather than in
-  // an effect, per React's "adjusting state on prop change" guidance. Gated to
-  // mobile so the desktop carousel's free-scroll doesn't collapse a wide card.
-  const [wasActive, setWasActive] = useState(isActive);
-  if (wasActive !== isActive) {
-    setWasActive(isActive);
-    if (
-      !isActive &&
-      typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px)").matches
-    ) {
-      setExpanded(false);
-    }
-  }
 
   // Shared variety rows — used by both the desktop and mobile expanded lists.
   const varietyRows = varieties.map((v, i) => (
@@ -99,10 +91,16 @@ export default function ProductCard({
   return (
     <article
       dir="rtl"
+      // The whole card is the click target — clicking anywhere on a collapsed
+      // card opens it (the ✕ / rows handle their own clicks while open). The
+      // inner "عرض الأصناف" button gives keyboard users the accessible trigger.
+      onClick={() => {
+        if (!expanded) onExpand?.();
+      }}
       className={`group relative w-full shrink-0 snap-center overflow-hidden rounded-4xl bg-white transition-all duration-500 md:duration-300 ${
         expanded
           ? "h-[82svh] md:h-[44rem] md:w-[70rem]"
-          : "h-[66svh] md:h-[44rem] md:w-[28rem]"
+          : "h-[66svh] cursor-pointer md:h-[44rem] md:w-[28rem]"
       }`}
     >
       {/* Background — desktop: fades in on hover. Mobile: shows on the active
@@ -125,10 +123,10 @@ export default function ProductCard({
         />
       </div>
 
-      {/* ---------- Desktop collapsed + hover layer — pinned to the left edge so
-          it never shifts; fades out as the card expands ---------- */}
+      {/* ---------- Desktop collapsed + hover layer — pinned to the right edge
+          (RTL) so it never shifts; fades out as the card expands ---------- */}
       <div
-        className={`absolute inset-y-0 left-0 z-10 hidden w-[28rem] transition-opacity duration-300 md:block ${
+        className={`absolute inset-y-0 right-0 z-10 hidden w-[28rem] transition-opacity duration-300 md:block ${
           expanded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
@@ -156,32 +154,40 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* ---------- Expanded (varieties) layer — pinned to the same left edge and
-          fixed at the full width, so the list is already in place and is simply
-          revealed by the growing card while it fades in ---------- */}
+      {/* ---------- Expanded (varieties) layer — pinned to the same right edge
+          (RTL) and fixed at the full width, so the list is already in place and
+          is simply revealed by the card growing to the LEFT while it fades in.
+          Layout: feed image on the right, varieties list on the left. ---------- */}
       <div
-        className={`absolute inset-y-0 left-0 z-10 hidden w-[70rem] flex-col transition-opacity duration-300 md:flex ${
+        className={`absolute inset-y-0 right-0 z-10 hidden w-[70rem] flex-col transition-opacity duration-300 md:flex ${
           expanded ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        {/* Close */}
+        {/* Close — top-left, over the list side */}
         <button
           type="button"
-          onClick={() => setExpanded(false)}
+          onClick={onCollapse}
           aria-label="إغلاق"
-          className="absolute right-6 top-6 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-[1.75rem] text-text"
+          className="absolute left-6 top-6 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white text-[1.75rem] text-text"
         >
           ✕
         </button>
 
         <div className="flex min-h-0 flex-1">
-          {/* Varieties list (right) — pulled toward the middle so the ✕ clears it */}
-          <div className="flex min-h-0 flex-1 items-start pb-8 pl-0 pr-[4rem] pt-[4rem]">
+          {/* Spacer for the feed image (right) — the image itself is the shared
+              element declared below, which moves + resizes into this slot. */}
+          <div className="w-[22rem] shrink-0" />
+
+          {/* Varieties list (left) — pulled toward the middle so the ✕ clears it.
+              items-center keeps the panel vertically centred, so a short list
+              still has space above + below it. */}
+          <div className="flex min-h-0 flex-1 items-center pb-8 pl-[4rem] pr-0 pt-[4rem]">
             <div className="w-full rounded-[2rem] bg-[#000f07]/10 p-5 backdrop-blur-[30px]">
-              {/* One column of fixed-height rows; scrolls with ~9.5 rows visible.
-                  data-lenis-prevent lets this scroll natively instead of Lenis
-                  hijacking the wheel to scroll the whole page. On expand the
-                  list "drops down" — it starts at one row and grows to full. */}
+              {/* One column of fixed-height rows; the panel hugs the rows and
+                  scrolls once past ~9.5 rows. data-lenis-prevent lets this scroll
+                  natively instead of Lenis hijacking the wheel to scroll the whole
+                  page. On expand the list "drops down" — it starts at one row and
+                  grows to fit. */}
               <div
                 data-lenis-prevent
                 className={`no-scrollbar flex flex-col gap-2 overflow-y-auto transition-[max-height] duration-600 ease-out ${
@@ -192,10 +198,6 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-
-          {/* Spacer for the feed image (left) — the image itself is the shared
-              element declared below, which moves + resizes into this slot. */}
-          <div className="w-[22rem] shrink-0" />
         </div>
 
         {/* Title + description */}
@@ -209,12 +211,12 @@ export default function ProductCard({
 
       {/* ---------- Desktop shared feed image — declared once so it MOVES and
           RESIZES between the collapsed slot (centred, 28rem) and the expanded
-          slot (left column, 22rem) instead of crossfading between two layers.
+          slot (right column, 22rem) instead of crossfading between two layers.
           Hidden until hover (crossfades in over the animal), stays visible while
-          expanded. Left-anchored, so it just narrows + shifts as the card grows.
-          ---------- */}
+          expanded. Right-anchored (RTL), so it just narrows + stays put as the
+          card grows to the left. ---------- */}
       <div
-        className={`pointer-events-none absolute left-0 top-0 z-[15] hidden transition-all duration-300 ease-out md:block ${
+        className={`pointer-events-none absolute right-0 top-0 z-[15] hidden transition-all duration-300 ease-out md:block ${
           expanded
             ? "h-[38.3rem] w-[22rem] p-8 opacity-100"
             : "h-[40rem] w-[28rem] p-10 opacity-0 group-hover:-translate-y-[4rem] group-hover:opacity-100"
@@ -239,7 +241,7 @@ export default function ProductCard({
         {/* Close — appears only while expanded */}
         <button
           type="button"
-          onClick={() => setExpanded(false)}
+          onClick={onCollapse}
           aria-label="إغلاق"
           className={`absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[1.25rem] text-text transition-opacity duration-300 ${
             expanded ? "opacity-100" : "pointer-events-none opacity-0"
@@ -282,18 +284,18 @@ export default function ProductCard({
         <div
           onTouchStart={onListTouchStart}
           onTouchEnd={onListTouchEnd}
-          className={`overflow-hidden px-4 transition-all duration-500 ${
+          className={`flex items-center overflow-hidden px-4 transition-all duration-500 ${
             expanded ? "h-[48svh]" : "h-0"
           }`}
         >
           <div
-            className={`h-full rounded-[1.5rem] bg-[#000f07]/10 p-3 transition-all duration-500 ${
+            className={`flex max-h-full min-h-0 w-full flex-col rounded-[1.5rem] bg-[#000f07]/10 p-3 transition-all duration-500 ${
               expanded ? "backdrop-blur-[30px]" : "backdrop-blur-0"
             }`}
           >
             <div
               data-lenis-prevent
-              className="no-scrollbar flex h-full touch-pan-y flex-col gap-2 overflow-y-auto"
+              className="no-scrollbar flex min-h-0 touch-pan-y flex-col gap-2 overflow-y-auto"
             >
               {varietyRows}
             </div>
@@ -315,10 +317,10 @@ export default function ProductCard({
 
       {/* "عرض الأصناف" box — spans the card's width. On desktop it slides up on
           hover; on mobile it stays visible (no hover). It drops out of view as
-          the card expands. */}
+          the card expands. Its click bubbles up to the card's own expand
+          handler, so no separate onClick is needed. */}
       <button
         type="button"
-        onClick={() => setExpanded(true)}
         className={`absolute inset-x-0 bottom-0 z-30 flex h-[4rem] cursor-pointer items-center justify-center gap-3 rounded-b-4xl bg-text text-white transition-transform duration-500 md:duration-300 ${
           expanded
             ? "pointer-events-none translate-y-full"
