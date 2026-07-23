@@ -10,18 +10,18 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
-  const maskRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Slide the footer content up into place as the page scrolls to its end.
-  // Desktop only — on mobile the footer is a natural-height stack, so there is
-  // nothing to reveal and the transform would clip the content.
+  // Slide the whole footer (copyright included) up out from behind the CTA as
+  // the page scrolls to its end, so it looks like the footer emerges from the
+  // CTA section. The CTA sits on top (higher z-index, opaque) and hides the part
+  // that hasn't come out yet; the shared wrapper (see page.tsx) clips the rest.
+  // Runs on both desktop and mobile.
   useGSAP(
     () => {
-      if (!window.matchMedia("(min-width: 768px)").matches) return;
       gsap.fromTo(
         contentRef.current,
-        { y: () => -(maskRef.current?.offsetHeight ?? 0) },
+        { y: () => -(contentRef.current?.offsetHeight ?? 0) },
         {
           y: 0,
           ease: "none",
@@ -39,15 +39,13 @@ export default function Footer() {
   );
 
   return (
-    <footer ref={footerRef} className="flex flex-col bg-text text-white md:flex-1">
-      {/* Mask: clips the content while it slides up into place (desktop only) */}
-      <div ref={maskRef} className="overflow-hidden md:flex-1">
+    <footer ref={footerRef} className="relative z-10 bg-text md:flex-1">
+      {/* The whole footer moves as one block so it slides out from behind the
+          CTA; copyright is part of it. */}
+      <div ref={contentRef} className="flex h-full flex-col bg-text text-white">
         {/* Main content: logo (right) + lists & paragraph (left) on desktop;
             on mobile the lists stack on top and the logo sits at the end. */}
-        <div
-          ref={contentRef}
-          className="flex flex-col gap-10 px-6 pt-10 md:h-full md:flex-row md:justify-between md:gap-0 md:px-10 md:pt-[3rem]"
-        >
+        <div className="flex flex-col gap-10 px-6 pt-10 md:flex-1 md:flex-row md:justify-between md:gap-0 md:px-10 md:pt-[3rem]">
           {/* Logo — full height on desktop; at the end, centered, on mobile */}
           <div className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]">
             <Image
@@ -146,13 +144,13 @@ export default function Footer() {
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Copyright — excluded from the reveal animation */}
-      <div className="bg-white py-5 text-center">
-        <p className="font-neo text-[0.875rem] text-text">
-          © 2026 جميع الحقوق محفوظة لشركة ازدهار فلسطين للأعلاف
-        </p>
+        {/* Copyright — part of the moving block so it reveals with the footer */}
+        <div className="bg-white py-5 text-center">
+          <p className="font-neo text-[0.875rem] text-text">
+            © 2026 جميع الحقوق محفوظة لشركة ازدهار فلسطين للأعلاف
+          </p>
+        </div>
       </div>
     </footer>
   );

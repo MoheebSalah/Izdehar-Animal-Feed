@@ -99,7 +99,7 @@ export default function ProductCard({
   return (
     <article
       dir="rtl"
-      className={`group relative w-full shrink-0 snap-center overflow-hidden rounded-4xl bg-white transition-all duration-500 ${
+      className={`group relative w-full shrink-0 snap-center overflow-hidden rounded-4xl bg-white transition-all duration-500 md:duration-300 ${
         expanded
           ? "h-[82svh] md:h-[44rem] md:w-[70rem]"
           : "h-[66svh] md:h-[44rem] md:w-[28rem]"
@@ -108,7 +108,7 @@ export default function ProductCard({
       {/* Background — desktop: fades in on hover. Mobile: shows on the active
           (centered) card. Always visible while expanded. */}
       <div
-        className={`absolute inset-0 transition-opacity duration-500 ${
+        className={`absolute inset-0 transition-opacity duration-500 md:duration-300 ${
           expanded
             ? "opacity-100"
             : isActive
@@ -128,19 +128,28 @@ export default function ProductCard({
       {/* ---------- Desktop collapsed + hover layer — pinned to the left edge so
           it never shifts; fades out as the card expands ---------- */}
       <div
-        className={`absolute inset-y-0 left-0 z-10 hidden w-[28rem] transition-opacity duration-500 md:block ${
+        className={`absolute inset-y-0 left-0 z-10 hidden w-[28rem] transition-opacity duration-300 md:block ${
           expanded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
         {/* Content — slides up a bit on hover, as if pushed by the box */}
-        <div className="relative z-10 flex h-full flex-col transition-transform duration-500 group-hover:-translate-y-[4rem]">
+        <div className="relative z-10 flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-[4rem]">
           <div className="relative flex-1">
+            {/* Animal image — crossfades to the feed image (the one shown in the
+                expanded card) on hover */}
             <Image
               src={image}
               alt={title}
               fill
               sizes="28rem"
-              className="object-contain p-10"
+              className="object-contain p-10 transition-opacity duration-300 group-hover:opacity-0"
+            />
+            <Image
+              src="/assets/Products/3alaf.webp"
+              alt={title}
+              fill
+              sizes="28rem"
+              className="object-contain p-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             />
           </div>
           <div className="flex items-end justify-between gap-6 px-6 pb-4">
@@ -158,7 +167,7 @@ export default function ProductCard({
           fixed at the full width, so the list is already in place and is simply
           revealed by the growing card while it fades in ---------- */}
       <div
-        className={`absolute inset-y-0 left-0 z-10 hidden w-[70rem] flex-col transition-opacity duration-500 md:flex ${
+        className={`absolute inset-y-0 left-0 z-10 hidden w-[70rem] flex-col transition-opacity duration-300 md:flex ${
           expanded ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
@@ -178,10 +187,13 @@ export default function ProductCard({
             <div className="w-full rounded-[2rem] bg-[#000f07]/10 p-5 backdrop-blur-[30px]">
               {/* One column of fixed-height rows; scrolls with ~9.5 rows visible.
                   data-lenis-prevent lets this scroll natively instead of Lenis
-                  hijacking the wheel to scroll the whole page. */}
+                  hijacking the wheel to scroll the whole page. On expand the
+                  list "drops down" — it starts at one row and grows to full. */}
               <div
                 data-lenis-prevent
-                className="no-scrollbar flex max-h-[29.2rem] flex-col gap-2 overflow-y-auto"
+                className={`no-scrollbar flex flex-col gap-2 overflow-y-auto transition-[max-height] duration-600 ease-out ${
+                  expanded ? "max-h-[29.2rem]" : "max-h-[2.6rem]"
+                }`}
               >
                 {varietyRows}
               </div>
@@ -297,7 +309,7 @@ export default function ProductCard({
       <button
         type="button"
         onClick={() => setExpanded(true)}
-        className={`absolute inset-x-0 bottom-0 z-30 flex h-[4rem] cursor-pointer items-center justify-center gap-3 rounded-b-4xl bg-text text-white transition-transform duration-500 ${
+        className={`absolute inset-x-0 bottom-0 z-30 flex h-[4rem] cursor-pointer items-center justify-center gap-3 rounded-b-4xl bg-text text-white transition-transform duration-500 md:duration-300 ${
           expanded
             ? "pointer-events-none translate-y-full"
             : "translate-y-0 md:translate-y-full md:group-hover:translate-y-0"

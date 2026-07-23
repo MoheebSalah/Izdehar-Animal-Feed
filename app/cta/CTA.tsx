@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function CTA() {
   return (
-    <div className="relative h-[50vh] w-full shrink-0 overflow-hidden md:h-[47%]">
+    <div className="relative z-20 h-[50vh] w-full shrink-0 overflow-hidden bg-text md:h-[47%]">
       <Image
         src="/assets/CTA/CTA Image.webp"
         alt="مصنع ازدهار للأعلاف"
