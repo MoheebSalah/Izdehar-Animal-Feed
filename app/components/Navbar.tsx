@@ -66,7 +66,7 @@ export default function Navbar() {
 
       <nav className="flex items-center justify-between px-6 py-4 md:px-10 md:py-6">
         {/* Right side (RTL): desktop links box */}
-        <div className="hidden items-center gap-6 rounded-xl bg-white px-6 py-2 shadow-[0_10px_40px_rgba(0,15,7,0.08)] md:flex">
+        <div className="hidden items-center gap-6 rounded-xl bg-white px-6 py-2  md:flex">
           {links.map((l) => (
             <button
               key={l.target}
@@ -104,12 +104,27 @@ export default function Navbar() {
           />
         </button>
 
-        {/* Left side (RTL): logo */}
-        <img
-          src="/svgs/navLogo.svg"
-          alt="ازدهار للأعلاف"
-          className="h-[2rem] w-auto md:h-[2.5rem]"
-        />
+        {/* Left side (RTL): logo — icon + wordmark as two parts (dir=ltr keeps
+            the icon on the left of the text). The intro's logo flies to these
+            exact positions, so they carry ids the LoadingScreen measures. */}
+        <div
+          id="nav-logo"
+          dir="ltr"
+          className="flex items-center gap-[0.45rem] md:gap-[0.55rem]"
+        >
+          <img
+            id="nav-logo-icon"
+            src="/svgs/logo.svg"
+            alt=""
+            className="h-[2rem] w-auto md:h-[2.5rem]"
+          />
+          <img
+            id="nav-logo-text"
+            src="/svgs/logoText.svg"
+            alt="ازدهار للأعلاف"
+            className="h-[1.65rem] w-auto md:h-[2.05rem]"
+          />
+        </div>
       </nav>
 
       {/* Mobile dropdown menu */}
