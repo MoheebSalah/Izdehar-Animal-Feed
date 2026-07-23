@@ -9,7 +9,7 @@ export default function Gallery() {
         src="/assets/Image Gallery/Image 5.webp"
         alt="مخزن الأعلاف والقش"
         rotation={4.15}
-        speed={120}
+        speed={80}
         className="left-[56.1rem] top-[1rem] h-[24.6rem] w-[20.5rem] z-30"
       />
 
@@ -45,7 +45,7 @@ export default function Gallery() {
         src="/assets/Image Gallery/Image 7.webp"
         alt="مصنع ازدهار وصوامع الحبوب"
         rotation={4.15}
-        speed={150}
+        speed={80}
         className="left-[26.7rem] top-[77rem] h-[20rem] w-[24rem] z-20"
       />
 

@@ -17,6 +17,8 @@ type GalleryImageProps = {
   rotation?: number;
   /** Parallax movement in px — larger for smaller images, smaller for bigger ones. */
   speed?: number;
+  /** Extra tilt in degrees added/removed as the page scrolls (very subtle). */
+  tilt?: number;
 };
 
 export default function GalleryImage({
@@ -25,6 +27,7 @@ export default function GalleryImage({
   className,
   rotation = 0,
   speed = 60,
+  tilt = 2,
 }: GalleryImageProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,10 +35,10 @@ export default function GalleryImage({
     () => {
       gsap.fromTo(
         ref.current,
-        { y: speed, rotation },
+        { y: speed, rotation: rotation - tilt },
         {
           y: -speed,
-          rotation,
+          rotation: rotation + tilt,
           ease: "none",
           scrollTrigger: {
             trigger: ref.current,
