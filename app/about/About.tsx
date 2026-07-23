@@ -2,19 +2,19 @@ import Parallax from "../components/Parallax";
 
 export default function About() {
   return (
-    <section className="flex h-[70vh] items-center justify-between gap-16 px-10">
-      {/* Title (right) — stronger parallax */}
+    <section className="flex flex-col justify-center gap-6 px-6 py-16 md:h-[70vh] md:flex-row md:items-center md:justify-between md:gap-16 md:px-10 md:py-0">
+      {/* Title — right on desktop, top on mobile — stronger parallax */}
       <Parallax speed={200} className="shrink-0">
-        <h2 className="font-palestine text-[7.5rem] leading-[1.4] text-text">
+        <h2 className="font-palestine text-[2.5rem] leading-[1.4] text-text md:text-[7.5rem]">
           صُنع في فلسطين،
           <br />
           لأجل فلسطين
         </h2>
       </Parallax>
 
-      {/* Paragraph (left) — lighter parallax */}
-      <Parallax speed={90} className="max-w-[48rem]">
-        <p className="font-neo text-[1.5rem] leading-[1.4] text-text">
+      {/* Paragraph — left on desktop, below the title on mobile — lighter parallax */}
+      <Parallax speed={90} className="md:max-w-[48rem]">
+        <p className="font-neo text-[1rem] leading-[1.4] text-text [&_br]:hidden md:text-[1.5rem] md:[&_br]:inline">
           تأسست &quot;ازدهار فلسطين للأعلاف&quot; في الخليل عام 2021، وبنينا في
           <br />
           المنطقة الصناعية بترقوميا مصنعًا على مساحة 45 ألف متر مربع,

@@ -3,7 +3,11 @@ import Parallax from "../components/Parallax";
 
 export default function Gallery() {
   return (
-    <section className="relative h-[122rem] w-full overflow-hidden">
+    <section className="relative h-[122rem] w-full overflow-hidden max-md:h-[27.53rem]">
+      {/* The collage is authored on a 108rem-wide desktop canvas. On mobile we
+          keep the exact same layout and simply scale the whole canvas down so
+          it fits the phone width (108rem → 0.2257 × viewport). */}
+      <div className="absolute left-0 top-0 h-[122rem] w-[108rem] origin-top-left max-md:scale-[0.2257]">
       {/* Hay storage shed — top, above the image it overlaps */}
       <GalleryImage
         src="/assets/Image Gallery/Image 5.webp"
@@ -78,6 +82,7 @@ export default function Gallery() {
           عن قرب
         </h2>
       </Parallax>
+      </div>
     </section>
   );
 }
