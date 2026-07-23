@@ -135,21 +135,14 @@ export default function ProductCard({
         {/* Content — slides up a bit on hover, as if pushed by the box */}
         <div className="relative z-10 flex h-full flex-col transition-transform duration-300 group-hover:-translate-y-[4rem]">
           <div className="relative flex-1">
-            {/* Animal image — crossfades to the feed image (the one shown in the
-                expanded card) on hover */}
+            {/* Animal image — fades out on hover to reveal the shared feed image
+                (declared once, below), which then moves + resizes on expand. */}
             <Image
               src={image}
               alt={title}
               fill
               sizes="28rem"
               className="object-contain p-10 transition-opacity duration-300 group-hover:opacity-0"
-            />
-            <Image
-              src="/assets/Products/3alaf.webp"
-              alt={title}
-              fill
-              sizes="28rem"
-              className="object-contain p-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             />
           </div>
           <div className="flex items-end justify-between gap-6 px-6 pb-4">
@@ -200,16 +193,9 @@ export default function ProductCard({
             </div>
           </div>
 
-          {/* Feed image (left) — sits over the animal image so it crossfades in place */}
-          <div className="relative w-[22rem] shrink-0">
-            <Image
-              src="/assets/Products/3alaf.webp"
-              alt={title}
-              fill
-              sizes="22rem"
-              className="object-contain p-8"
-            />
-          </div>
+          {/* Spacer for the feed image (left) — the image itself is the shared
+              element declared below, which moves + resizes into this slot. */}
+          <div className="w-[22rem] shrink-0" />
         </div>
 
         {/* Title + description */}
@@ -218,6 +204,30 @@ export default function ProductCard({
           <p className="max-w-[22rem] text-left font-neo text-[1.5rem] leading-[1.4] text-text">
             {description}
           </p>
+        </div>
+      </div>
+
+      {/* ---------- Desktop shared feed image — declared once so it MOVES and
+          RESIZES between the collapsed slot (centred, 28rem) and the expanded
+          slot (left column, 22rem) instead of crossfading between two layers.
+          Hidden until hover (crossfades in over the animal), stays visible while
+          expanded. Left-anchored, so it just narrows + shifts as the card grows.
+          ---------- */}
+      <div
+        className={`pointer-events-none absolute left-0 top-0 z-[15] hidden transition-all duration-300 ease-out md:block ${
+          expanded
+            ? "h-[38.3rem] w-[22rem] p-8 opacity-100"
+            : "h-[40rem] w-[28rem] p-10 opacity-0 group-hover:-translate-y-[4rem] group-hover:opacity-100"
+        }`}
+      >
+        <div className="relative h-full w-full">
+          <Image
+            src="/assets/Products/3alaf.webp"
+            alt={title}
+            fill
+            sizes="28rem"
+            className="object-contain"
+          />
         </div>
       </div>
 
