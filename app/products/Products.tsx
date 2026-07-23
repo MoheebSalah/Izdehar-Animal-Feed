@@ -91,6 +91,9 @@ export default function Products() {
   // Only one card is ever expanded — the parent owns which, so opening one
   // closes any other. `null` = all collapsed.
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  // The previously expanded card, so the centering below can account for it
+  // still collapsing while the new one expands.
+  const prevExpandedRef = useRef<number | null>(null);
 
   // Track which card is centered (dots + mobile). Uses screen-space rects so it
   // works in either direction — the carousel is RTL, where scrollLeft is
@@ -135,6 +138,8 @@ export default function Products() {
   // card grows to the LEFT from a fixed right edge, so its final centre sits
   // half of the expanded width (70rem → 35rem) to the left of that edge.
   useEffect(() => {
+    const prev = prevExpandedRef.current;
+    prevExpandedRef.current = expandedIndex;
     if (expandedIndex === null || isMobile()) return;
     const el = trackRef.current;
     const child = el?.children[expandedIndex] as HTMLElement | undefined;
@@ -144,7 +149,15 @@ export default function Products() {
     );
     const cardRect = child.getBoundingClientRect();
     const containerRect = el.getBoundingClientRect();
-    const finalCenter = cardRect.right - 35 * remPx;
+    // The measured right edge is taken while any previously expanded card is
+    // still collapsing (70rem → 28rem). If that card sits to the RIGHT of this
+    // one (lower index in RTL), it will free 42rem and push this card's right
+    // edge back rightward — so add that width back to center on the final spot.
+    let rightEdge = cardRect.right;
+    if (prev !== null && prev < expandedIndex) {
+      rightEdge += (70 - 28) * remPx;
+    }
+    const finalCenter = rightEdge - 35 * remPx;
     const desiredCenter = containerRect.left + containerRect.width / 2;
     el.scrollTo({
       left: el.scrollLeft + (finalCenter - desiredCenter),

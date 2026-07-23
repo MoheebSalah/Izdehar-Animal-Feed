@@ -203,7 +203,7 @@ export default function ProductCard({
         {/* Title + description */}
         <div className="flex items-end justify-between gap-6 px-6 pb-6">
           <h3 className="font-neo text-[2.5rem] font-bold text-text">{title}</h3>
-          <p className="max-w-[22rem] text-left font-neo text-[1.5rem] leading-[1.4] text-text">
+          <p className="whitespace-nowrap text-left font-neo text-[1.5rem] leading-[1.4] text-text">
             {description}
           </p>
         </div>
