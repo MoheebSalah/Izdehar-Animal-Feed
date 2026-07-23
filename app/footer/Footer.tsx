@@ -10,21 +10,26 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  // Slide the whole footer (copyright included) up out from behind the CTA as
-  // the page scrolls to its end, so it looks like the footer emerges from the
-  // CTA section. The CTA sits on top (higher z-index, opaque) and hides the part
-  // that hasn't come out yet; the shared wrapper (see page.tsx) clips the rest.
-  // Runs on both desktop and mobile.
+  // Reveal-on-scroll: each footer block starts a little BELOW its final spot and
+  // rises up into place as the footer scrolls into view. The motion is scrubbed
+  // to the scroll (so it tracks the wheel exactly) and lightly staggered, so the
+  // blocks settle one after another for a layered rise. The footer's own
+  // overflow-hidden clips the offset content, making it look like the elements
+  // emerge from the bottom edge. Runs on both desktop and mobile.
   useGSAP(
     () => {
+      const items = gsap.utils.toArray<HTMLElement>(
+        "[data-footer-item]",
+        footerRef.current
+      );
       gsap.fromTo(
-        contentRef.current,
-        { y: () => -(contentRef.current?.offsetHeight ?? 0) },
+        items,
+        { y: () => (footerRef.current?.offsetHeight ?? 0) * 0.15 },
         {
           y: 0,
           ease: "none",
+          stagger: 0.12,
           scrollTrigger: {
             trigger: footerRef.current,
             start: "top bottom",
@@ -39,15 +44,19 @@ export default function Footer() {
   );
 
   return (
-    <footer ref={footerRef} className="relative z-10 bg-text md:flex-1">
-      {/* The whole footer moves as one block so it slides out from behind the
-          CTA; copyright is part of it. */}
-      <div ref={contentRef} className="flex h-full flex-col bg-text text-white">
+    <footer
+      ref={footerRef}
+      className="relative z-10 overflow-hidden bg-text md:flex-1"
+    >
+      <div className="flex h-full flex-col bg-text text-white">
         {/* Main content: logo (right) + lists & paragraph (left) on desktop;
             on mobile the lists stack on top and the logo sits at the end. */}
         <div className="flex flex-col gap-10 px-6 pt-10 md:flex-1 md:flex-row md:justify-between md:gap-0 md:px-10 md:pt-[3rem]">
           {/* Logo — full height on desktop; at the end, centered, on mobile */}
-          <div className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]">
+          <div
+            data-footer-item
+            className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]"
+          >
             <Image
               src="/assets/logo.webp"
               alt="ازدهار للأعلاف"
@@ -62,7 +71,10 @@ export default function Footer() {
           <div className="order-1 flex w-full flex-col justify-between gap-8 md:order-2 md:w-[calc(50%_+_8rem)] md:gap-0 md:pb-[3rem]">
             {/* Lists — two columns of links on mobile with the contact info
                 spanning below; a single row on desktop. */}
-            <div className="grid grid-cols-2 gap-6 md:flex md:justify-between">
+            <div
+              data-footer-item
+              className="grid grid-cols-2 gap-6 md:flex md:justify-between"
+            >
               {/* الشركة (right) */}
               <div className="flex flex-col gap-3 text-right">
                 <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.5rem]">
@@ -137,7 +149,10 @@ export default function Footer() {
             </div>
 
             {/* Company description — below the lists, aligned with them */}
-            <p className="font-neo text-[1rem] leading-[1.7] text-white">
+            <p
+              data-footer-item
+              className="font-neo text-[1rem] leading-[1.7] text-white"
+            >
               ازدهار فلسطين للأعلاف، مصنع فلسطيني في ترقوميا، الخليل، بنصنع أعلاف
               متوازنة لكل أنواع الثروة الحيوانية. هدفنا نخفّض كلفة الإنتاج على
               المزارع الفلسطيني ونحلّ العلف المحلي مكان المستورد.
@@ -145,8 +160,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright — part of the moving block so it reveals with the footer */}
-        <div className="bg-white py-5 text-center">
+        {/* Copyright — rises into place last, from the bottom edge */}
+        <div data-footer-item className="bg-white py-5 text-center">
           <p className="font-neo text-[0.875rem] text-text">
             © 2026 جميع الحقوق محفوظة لشركة ازدهار فلسطين للأعلاف
           </p>
