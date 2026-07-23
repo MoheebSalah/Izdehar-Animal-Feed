@@ -3,11 +3,10 @@ import Parallax from "../components/Parallax";
 
 export default function Gallery() {
   return (
-    <section className="relative h-[122rem] w-full overflow-hidden max-md:h-[27.53rem]">
-      {/* The collage is authored on a 108rem-wide desktop canvas. On mobile we
-          keep the exact same layout and simply scale the whole canvas down so
-          it fits the phone width (108rem → 0.2257 × viewport). */}
-      <div className="absolute left-0 top-0 h-[122rem] w-[108rem] origin-top-left max-md:scale-[0.2257]">
+    <section className="relative h-[46rem] w-full overflow-hidden md:h-[122rem]">
+      {/* Desktop collage — authored on a 108rem-wide canvas (= 100vw at the
+          design scale). Hidden on mobile, which gets its own layout below. */}
+      <div className="absolute left-0 top-0 hidden h-[122rem] w-[108rem] md:block">
       {/* Hay storage shed — top, above the image it overlaps */}
       <GalleryImage
         src="/assets/Image Gallery/Image 5.webp"
@@ -82,6 +81,77 @@ export default function Gallery() {
           عن قرب
         </h2>
       </Parallax>
+      </div>
+
+      {/* ---------- Mobile layout — a big centered title with the images
+          scattered above, below and around it ---------- */}
+      <div className="relative h-full md:hidden">
+        {/* Above the title */}
+        <GalleryImage
+          src="/assets/Image Gallery/Image 5.webp"
+          alt="مخزن الأعلاف والقش"
+          rotation={5}
+          speed={40}
+          className="left-[1rem] top-[1.5rem] h-[11rem] w-[8.5rem] z-10"
+        />
+        <GalleryImage
+          src="/assets/Image Gallery/Image 2.webp"
+          alt="بقرة تأكل العلف"
+          rotation={-8}
+          speed={55}
+          className="right-[0.5rem] top-[3rem] h-[8rem] w-[11rem] z-20"
+        />
+
+        {/* Flanking the title */}
+        <GalleryImage
+          src="/assets/Image Gallery/Image 4.webp"
+          alt="مختبر الجودة في مصنع ازدهار"
+          rotation={12}
+          speed={60}
+          className="left-[0.5rem] top-[16.5rem] h-[7.5rem] w-[10rem] z-20"
+        />
+        <GalleryImage
+          src="/assets/Image Gallery/Image 1.webp"
+          alt="حبيبات العلف تنسكب"
+          rotation={-7}
+          speed={35}
+          className="right-[0.5rem] top-[25.5rem] h-[8.5rem] w-[10rem] z-20"
+        />
+
+        {/* Below the title */}
+        <GalleryImage
+          src="/assets/Image Gallery/Image 7.webp"
+          alt="مصنع ازدهار وصوامع الحبوب"
+          rotation={5}
+          speed={50}
+          className="left-[1.5rem] bottom-[9.5rem] h-[7.5rem] w-[9rem] z-10"
+        />
+        <GalleryImage
+          src="/assets/Image Gallery/Image 3.webp"
+          alt="يدان تحملان حبيبات العلف"
+          rotation={-12}
+          speed={65}
+          className="left-[1rem] bottom-[1rem] h-[9rem] w-[8rem] z-10"
+        />
+        <GalleryImage
+          src="/assets/Image Gallery/Image 6.webp"
+          alt="مبنى مصنع ازدهار للأعلاف"
+          rotation={-3}
+          speed={45}
+          className="right-[1rem] bottom-[1rem] h-[10rem] w-[8.5rem] z-10"
+        />
+
+        {/* Title — big and centered */}
+        <Parallax
+          speed={40}
+          className="absolute inset-x-0 top-1/2 z-40 -translate-y-1/2"
+        >
+          <h2 className="text-center font-palestine text-[3.25rem] leading-[1.1] text-text">
+            شوف شغلنا
+            <br />
+            عن قرب
+          </h2>
+        </Parallax>
       </div>
     </section>
   );

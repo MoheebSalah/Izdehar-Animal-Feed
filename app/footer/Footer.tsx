@@ -14,8 +14,11 @@ export default function Footer() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Slide the footer content up into place as the page scrolls to its end.
+  // Desktop only — on mobile the footer is a natural-height stack, so there is
+  // nothing to reveal and the transform would clip the content.
   useGSAP(
     () => {
+      if (!window.matchMedia("(min-width: 768px)").matches) return;
       gsap.fromTo(
         contentRef.current,
         { y: () => -(maskRef.current?.offsetHeight ?? 0) },
@@ -36,18 +39,19 @@ export default function Footer() {
   );
 
   return (
-    <footer ref={footerRef} className="flex flex-1 flex-col bg-text text-white">
-      {/* Mask: clips the content while it slides up into place */}
-      <div ref={maskRef} className="flex-1 overflow-hidden">
-        {/* Main content: logo (right) + lists & paragraph (left) */}
+    <footer ref={footerRef} className="flex flex-col bg-text text-white md:flex-1">
+      {/* Mask: clips the content while it slides up into place (desktop only) */}
+      <div ref={maskRef} className="overflow-hidden md:flex-1">
+        {/* Main content: logo (right) + lists & paragraph (left) on desktop;
+            on mobile the lists stack on top and the logo sits at the end. */}
         <div
           ref={contentRef}
-          className="flex h-full justify-between px-10 pt-[3rem]"
+          className="flex flex-col gap-10 px-6 pt-10 md:h-full md:flex-row md:justify-between md:gap-0 md:px-10 md:pt-[3rem]"
         >
-          {/* Logo — takes the full height of the footer, with a small gap below */}
-          <div className="relative mb-[2rem] w-[22rem] shrink-0">
+          {/* Logo — full height on desktop; at the end, centered, on mobile */}
+          <div className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]">
             <Image
-              src="/assets/logo.png"
+              src="/assets/logo.webp"
               alt="ازدهار للأعلاف"
               fill
               sizes="22rem"
@@ -55,78 +59,79 @@ export default function Footer() {
             />
           </div>
 
-          {/* Left part — width places the right edge (الشركة) under the CTA button's
-              right edge (button is 16rem wide and centered → 50% + 8rem). */}
-          <div className="flex w-[calc(50%_+_8rem)] flex-col justify-between pb-[3rem]">
-            {/* 3 lists with equal spacing between them */}
-            <div className="flex justify-between">
+          {/* Left part — full width on mobile; on desktop its width places the
+              right edge (الشركة) under the CTA button's right edge. */}
+          <div className="order-1 flex w-full flex-col justify-between gap-8 md:order-2 md:w-[calc(50%_+_8rem)] md:gap-0 md:pb-[3rem]">
+            {/* Lists — two columns of links on mobile with the contact info
+                spanning below; a single row on desktop. */}
+            <div className="grid grid-cols-2 gap-6 md:flex md:justify-between">
               {/* الشركة (right) */}
               <div className="flex flex-col gap-3 text-right">
-                <h3 className="mb-2 font-neo text-[1.5rem] font-bold text-white">
+                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.5rem]">
                   الشركة
                 </h3>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   من نحن
                 </a>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   منتجاتنا
                 </a>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   تواصل معنا
                 </a>
               </div>
 
               {/* منتجاتنا */}
               <div className="flex flex-col gap-3 text-right">
-                <h3 className="mb-2 font-neo text-[1.5rem] font-bold text-white">
+                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.5rem]">
                   منتجاتنا
                 </h3>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   أعلاف مواشي
                 </a>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   دجاج لاحم
                 </a>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   دجاج بيّاض
                 </a>
-                <a href="#" className="font-neo text-[1.5rem] text-white/70">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
                   المزيد
                 </a>
               </div>
 
               {/* Contact info (left) — fixed-width icon column keeps all icons and
-                  text starts aligned. */}
-              <div className="flex flex-col items-start gap-4">
-                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-white">
-                  <span className="flex w-[1.5rem] shrink-0 items-center justify-center">
-                    <img src="/svgs/phone.svg" alt="" className="h-[1.5rem] w-auto" />
+                  text starts aligned. Spans both grid columns on mobile. */}
+              <div className="col-span-2 flex flex-col items-start gap-4 md:col-auto">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                  <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
+                    <img src="/svgs/phone.svg" alt="" className="h-[1.1rem] w-auto md:h-[1.5rem]" />
                   </span>
                   <span dir="ltr">+972 2 22233222</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-white">
-                  <span className="flex w-[1.5rem] shrink-0 items-center justify-center">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                  <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img
                       src="/svgs/location.svg"
                       alt=""
-                      className="h-[1.5rem] w-auto"
+                      className="h-[1.1rem] w-auto md:h-[1.5rem]"
                     />
                   </span>
                   <span>ترقوميا، الخليل، فلسطين</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-white">
-                  <span className="flex w-[1.5rem] shrink-0 items-center justify-center">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                  <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img
                       src="/svgs/mobile.svg"
                       alt=""
-                      className="h-[1.5rem] w-auto"
+                      className="h-[1.1rem] w-auto md:h-[1.5rem]"
                     />
                   </span>
                   <span dir="ltr">+972 562242003</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.5rem] text-white">
-                  <span className="flex w-[1.5rem] shrink-0 items-center justify-center">
-                    <img src="/svgs/mail.svg" alt="" className="h-[1.5rem] w-auto" />
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                  <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
+                    <img src="/svgs/mail.svg" alt="" className="h-[1.1rem] w-auto md:h-[1.5rem]" />
                   </span>
                   <span dir="ltr">info@izdeharanimal.ps</span>
                 </div>

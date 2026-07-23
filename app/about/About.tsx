@@ -2,9 +2,13 @@ import Parallax from "../components/Parallax";
 
 export default function About() {
   return (
-    <section className="flex flex-col justify-center gap-6 px-6 py-16 md:h-[70vh] md:flex-row md:items-center md:justify-between md:gap-16 md:px-10 md:py-0">
-      {/* Title — right on desktop, top on mobile — stronger parallax */}
-      <Parallax speed={200} className="shrink-0">
+    <section
+      id="about"
+      className="flex flex-col justify-center gap-6 px-6 py-16 md:h-[70vh] md:flex-row md:items-center md:justify-between md:gap-16 md:px-10 md:py-0"
+    >
+      {/* Title — right on desktop, top on mobile. Strong parallax on desktop,
+          much gentler on mobile. */}
+      <Parallax speed={200} mobileSpeed={30} className="shrink-0">
         <h2 className="font-palestine text-[2.5rem] leading-[1.4] text-text md:text-[7.5rem]">
           صُنع في فلسطين،
           <br />

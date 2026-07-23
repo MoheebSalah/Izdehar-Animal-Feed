@@ -108,7 +108,7 @@ export default function Products() {
   };
 
   return (
-    <section className="flex flex-col">
+    <section id="products" className="flex flex-col">
       {/* Heading: label (right), title (near middle), paragraph (left) on
           desktop; stacked on mobile. */}
       <div className="flex flex-col gap-2 px-6 pt-10 md:flex-row md:items-start md:justify-between md:px-10 md:pt-12">
@@ -135,12 +135,18 @@ export default function Products() {
         className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-6 py-6 md:flex-1 md:snap-none md:gap-10 md:px-10 md:py-12"
       >
         {products.map((p, i) => (
-          <ProductCard key={i} {...p} />
+          <ProductCard
+            key={i}
+            {...p}
+            isActive={active === i}
+            onSwipe={(dir) => goTo(i + dir)}
+          />
         ))}
       </div>
 
-      {/* Dot indicators — mobile only */}
-      <div className="flex justify-center gap-2 pb-2 md:hidden">
+      {/* Dot indicators — mobile only. LTR so the dots line up with the
+          left-to-right carousel instead of reading reversed. */}
+      <div dir="ltr" className="flex justify-center gap-2 pb-2 md:hidden">
         {products.map((_, i) => (
           <button
             key={i}

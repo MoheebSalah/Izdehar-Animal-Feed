@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type ProductCardProps = {
   image: string;
   title: string;
   description: string;
   varieties: { code: string; name: string }[];
+  /** Mobile only: the centered card in the carousel shows the hover background. */
+  isActive?: boolean;
+  /** Mobile only: a horizontal swipe over the open list moves the carousel
+      (+1 = next card, -1 = previous). */
+  onSwipe?: (dir: number) => void;
 };
 
 export default function ProductCard({
@@ -15,20 +20,59 @@ export default function ProductCard({
   title,
   description,
   varieties,
+  isActive = false,
+  onSwipe,
 }: ProductCardProps) {
   const [expanded, setExpanded] = useState(false);
+
+  // Mobile: the list is a vertical scroller, which the browser also makes a
+  // horizontal scroll container — so it swallows left/right swipes instead of
+  // passing them to the carousel. We detect a horizontal swipe ourselves and
+  // drive the carousel (touch-action: pan-y keeps native vertical scrolling).
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const onListTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onListTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      onSwipe?.(dx < 0 ? 1 : -1);
+    }
+  };
+
+  // Mobile: collapse the card when it is swiped away from (no longer centered).
+  // Handled during render (comparing against the previous prop) rather than in
+  // an effect, per React's "adjusting state on prop change" guidance. Gated to
+  // mobile so the desktop carousel's free-scroll doesn't collapse a wide card.
+  const [wasActive, setWasActive] = useState(isActive);
+  if (wasActive !== isActive) {
+    setWasActive(isActive);
+    if (
+      !isActive &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+    ) {
+      setExpanded(false);
+    }
+  }
 
   // Shared variety rows — used by both the desktop and mobile expanded lists.
   const varietyRows = varieties.map((v, i) => (
     <div
       key={i}
       dir="rtl"
-      className="group/row relative flex h-[2.6rem] w-full shrink-0 cursor-pointer items-center gap-3 rounded-xl bg-white px-4 font-neo text-[1.05rem] text-text"
+      className="group/row relative flex min-h-[2.3rem] w-full shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-white px-3 py-1.5 font-neo text-[0.8rem] leading-[1.4] text-text md:h-[2.6rem] md:gap-3 md:px-4 md:py-0 md:text-[1.05rem]"
     >
       {/* Product number (rightmost) — fixed width so numbers align */}
       <span
         dir="ltr"
-        className="w-[3rem] shrink-0 text-right text-muted transition-colors group-hover/row:text-text"
+        className="w-[2.5rem] shrink-0 text-right text-muted transition-colors group-hover/row:text-text md:w-[3rem]"
       >
         {v.code}
       </span>
@@ -57,14 +101,19 @@ export default function ProductCard({
       dir="rtl"
       className={`group relative w-full shrink-0 snap-center overflow-hidden rounded-4xl bg-white transition-all duration-500 ${
         expanded
-          ? "h-[46rem] md:h-[44rem] md:w-[70rem]"
-          : "h-[44rem] md:w-[28rem]"
+          ? "h-[82svh] md:h-[44rem] md:w-[70rem]"
+          : "h-[66svh] md:h-[44rem] md:w-[28rem]"
       }`}
     >
-      {/* Background — fades in on hover, stays visible while expanded */}
+      {/* Background — desktop: fades in on hover. Mobile: shows on the active
+          (centered) card. Always visible while expanded. */}
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${
-          expanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          expanded
+            ? "opacity-100"
+            : isActive
+              ? "opacity-0 group-hover:opacity-100 max-md:opacity-100"
+              : "opacity-0 group-hover:opacity-100"
         }`}
       >
         <Image
@@ -76,16 +125,15 @@ export default function ProductCard({
         />
       </div>
 
-      {/* ---------- Collapsed + hover layer — pinned to the left edge so it never
-          shifts; fades out as the card expands ---------- */}
+      {/* ---------- Desktop collapsed + hover layer — pinned to the left edge so
+          it never shifts; fades out as the card expands ---------- */}
       <div
-        className={`absolute inset-y-0 left-0 z-10 w-full transition-opacity duration-500 md:w-[28rem] ${
+        className={`absolute inset-y-0 left-0 z-10 hidden w-[28rem] transition-opacity duration-500 md:block ${
           expanded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
-        {/* Content — on mobile it sits shifted up to make room for the always
-            visible button; on desktop it only slides up on hover. */}
-        <div className="relative z-10 flex h-full flex-col -translate-y-[4rem] transition-transform duration-500 md:translate-y-0 md:group-hover:-translate-y-[4rem]">
+        {/* Content — slides up a bit on hover, as if pushed by the box */}
+        <div className="relative z-10 flex h-full flex-col transition-transform duration-500 group-hover:-translate-y-[4rem]">
           <div className="relative flex-1">
             <Image
               src={image}
@@ -143,7 +191,7 @@ export default function ProductCard({
           {/* Feed image (left) — sits over the animal image so it crossfades in place */}
           <div className="relative w-[22rem] shrink-0">
             <Image
-              src="/assets/Products/3alaf.png"
+              src="/assets/Products/3alaf.webp"
               alt={title}
               fill
               sizes="22rem"
@@ -161,54 +209,85 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* ---------- Mobile expanded (varieties) layer — the card grows
-          vertically, so the layout stacks: feed image on top, then title, then
-          the scrollable list below ---------- */}
-      <div
-        dir="rtl"
-        className={`absolute inset-0 z-10 flex flex-col transition-opacity duration-500 md:hidden ${
-          expanded ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        {/* Close */}
+      {/* ---------- Mobile layer — one morphing layout. On expand the animal
+          image slides up and swaps to the feed image, the varieties list grows
+          in between, and the title + description stay pinned at the bottom.
+          ---------- */}
+      <div dir="rtl" className="absolute inset-0 z-10 flex flex-col md:hidden">
+        {/* Close — appears only while expanded */}
         <button
           type="button"
           onClick={() => setExpanded(false)}
           aria-label="إغلاق"
-          className="absolute right-4 top-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white text-[1.5rem] text-text"
+          className={`absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[1.25rem] text-text transition-opacity duration-300 ${
+            expanded ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
         >
           ✕
         </button>
 
-        {/* Feed image on top */}
-        <div className="relative h-[14rem] shrink-0">
+        {/* Image area — always fills the leftover space, so it shrinks and
+            grows smoothly (both ways) as the list height and card height
+            animate, instead of snapping between fixed sizes. */}
+        <div className="relative min-h-0 flex-1">
+          {/* Animal image — slides up and fades out as the card expands */}
           <Image
-            src="/assets/Products/3alaf.png"
+            src={image}
             alt={title}
             fill
             sizes="100vw"
-            className="object-contain p-6"
+            className={`object-contain p-8 transition-all duration-500 ${
+              expanded ? "-translate-y-6 opacity-0" : "opacity-100"
+            }`}
+          />
+          {/* Feed image — fades in at the top once the animal has moved up */}
+          <Image
+            src="/assets/Products/3alaf.webp"
+            alt={title}
+            fill
+            sizes="100vw"
+            className={`object-contain p-6 transition-opacity duration-500 ${
+              expanded ? "opacity-100 delay-150" : "opacity-0"
+            }`}
           />
         </div>
 
-        {/* Title + description */}
-        <div className="flex items-end justify-between gap-4 px-5 pb-3">
-          <h3 className="font-neo text-[1.75rem] font-bold text-text">{title}</h3>
-          <p className="max-w-[12rem] text-left font-neo text-[1rem] leading-[1.4] text-text">
-            {description}
-          </p>
-        </div>
-
-        {/* Varieties list — fills the rest and scrolls */}
-        <div className="min-h-0 flex-1 px-4 pb-4">
-          <div className="h-full rounded-[1.5rem] bg-[#000f07]/10 p-3 backdrop-blur-[30px]">
+        {/* Varieties list — the height animates both ways. The blur amount is
+            animated directly (blur(0) → blur(30px)); animating the wrapper's
+            opacity instead would make the backdrop-filter snap in at the end.
+            Vertical drags scroll natively (touch-action: pan-y); a horizontal
+            drag is caught here and moves the carousel. */}
+        <div
+          onTouchStart={onListTouchStart}
+          onTouchEnd={onListTouchEnd}
+          className={`overflow-hidden px-4 transition-all duration-500 ${
+            expanded ? "h-[48svh]" : "h-0"
+          }`}
+        >
+          <div
+            className={`h-full rounded-[1.5rem] bg-[#000f07]/10 p-3 transition-all duration-500 ${
+              expanded ? "backdrop-blur-[30px]" : "backdrop-blur-0"
+            }`}
+          >
             <div
               data-lenis-prevent
-              className="no-scrollbar flex h-full flex-col gap-2 overflow-y-auto"
+              className="no-scrollbar flex h-full touch-pan-y flex-col gap-2 overflow-y-auto"
             >
               {varietyRows}
             </div>
           </div>
+        </div>
+
+        {/* Title + description — pinned at the bottom in both states */}
+        <div
+          className={`flex shrink-0 items-end justify-between gap-4 px-5 pt-3 transition-all duration-500 ${
+            expanded ? "pb-5" : "pb-[4.5rem]"
+          }`}
+        >
+          <h3 className="font-neo text-[1.5rem] font-bold text-text">{title}</h3>
+          <p className="max-w-[10rem] text-left font-neo text-[0.9rem] leading-[1.4] text-text">
+            {description}
+          </p>
         </div>
       </div>
 

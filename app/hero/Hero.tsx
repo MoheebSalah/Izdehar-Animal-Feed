@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="flex h-screen flex-col overflow-hidden">
+    <section className="flex h-[100svh] flex-col overflow-hidden md:h-screen">
       {/* Background video — top on desktop (1728 x 835 in the design), bottom
           half on mobile. */}
       <div className="relative order-2 h-1/2 w-full shrink-0 overflow-hidden md:order-1 md:h-[70vh]">
@@ -18,7 +18,7 @@ export default function Hero() {
           (heading left, paragraph right — in RTL the first child is on the
           right, so order swaps them). On mobile they stack in the top half:
           title first, paragraph below. */}
-      <div className="order-1 flex h-1/2 flex-col justify-center gap-4 px-6 md:order-2 md:h-auto md:flex-1 md:flex-row md:items-end md:justify-between md:gap-12 md:px-10 md:pb-8">
+      <div className="order-1 flex h-1/2 flex-col justify-center gap-14 px-6 md:order-2 md:h-auto md:flex-1 md:flex-row md:items-end md:justify-between md:gap-12 md:px-10 md:pb-8">
         <h1 className="order-1 font-palestine text-[2.25rem] leading-[1.4] text-text md:order-2 md:text-[4.5rem]">
           علف فلسطيني…
           <br />

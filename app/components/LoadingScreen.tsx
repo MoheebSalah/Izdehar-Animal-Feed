@@ -29,13 +29,15 @@ export default function LoadingScreen() {
 
   useGSAP(() => {
     // On mobile the hero video is the bottom half, so the overlay is anchored
-    // to the bottom (see className) and shrinks to 50vh — i.e. from the top.
-    // On desktop the video is the top 70vh and the overlay stays pinned to the
-    // top, shrinking from the bottom.
+    // to the bottom (see className) and shrinks from the top down to it.
+    // We use half of the *visible* viewport (window.innerHeight) rather than
+    // 50vh, because on mobile browsers `vh` ignores the URL bar and would make
+    // the overlay taller than the actual video. On desktop the video is the
+    // top 70vh and the overlay stays pinned to the top, shrinking from below.
     const isMobile =
       typeof window !== "undefined" &&
       window.matchMedia("(max-width: 767px)").matches;
-    const targetHeight = isMobile ? "50vh" : "70vh";
+    const targetHeight = isMobile ? window.innerHeight / 2 : "70vh";
 
     const tl = gsap.timeline({
       onComplete: () => setDone(true),
@@ -86,7 +88,7 @@ export default function LoadingScreen() {
       <div ref={groupRef} className="flex w-full flex-col items-center">
         <Image
           ref={logoRef}
-          src="/assets/logo.png"
+          src="/assets/logo.webp"
           alt="ازدهار للأعلاف"
           width={347}
           height={485}
