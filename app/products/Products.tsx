@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProductCard from "../components/ProductCard";
 
 const livestockVarieties = [
@@ -81,31 +81,89 @@ const products = [
   },
 ];
 
+const isMobile = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(max-width: 767px)").matches;
+
 export default function Products() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  // Only one card is ever expanded — the parent owns which, so opening one
+  // closes any other. `null` = all collapsed.
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  // The previously expanded card, so the centering below can account for it
+  // still collapsing while the new one expands.
+  const prevExpandedRef = useRef<number | null>(null);
 
-  // Mobile carousel: track which card is centered so the dots stay in sync.
+  // Track which card is centered (dots + mobile). Uses screen-space rects so it
+  // works in either direction — the carousel is RTL, where scrollLeft is
+  // negative and offsetLeft-based math would break.
   const handleScroll = () => {
     const el = trackRef.current;
     if (!el) return;
+    const mid = el.getBoundingClientRect().left + el.clientWidth / 2;
     let closest = 0;
     let min = Infinity;
     Array.from(el.children).forEach((child, i) => {
-      const dist = Math.abs((child as HTMLElement).offsetLeft - el.scrollLeft);
+      const r = (child as HTMLElement).getBoundingClientRect();
+      const center = r.left + r.width / 2;
+      const dist = Math.abs(center - mid);
       if (dist < min) {
         min = dist;
         closest = i;
       }
     });
     setActive(closest);
+    // Mobile only: collapse an expanded card once it's swiped away from. On
+    // desktop the programmatic centering below scrolls the track, so we must
+    // NOT collapse on scroll there.
+    setExpandedIndex((prev) =>
+      prev !== null && prev !== closest && isMobile() ? null : prev
+    );
   };
 
   const goTo = (i: number) => {
-    const el = trackRef.current;
-    const child = el?.children[i] as HTMLElement | undefined;
-    if (el && child) el.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+    const child = trackRef.current?.children[i] as HTMLElement | undefined;
+    child?.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+      behavior: "smooth",
+    });
   };
+
+  // When a card expands on desktop, pan the carousel so the (now wide) card
+  // ends up centered — this keeps it from growing off the edge of the screen.
+  // We solve for the final scroll offset up front and animate to it immediately,
+  // so the pan runs *together* with the width growth instead of after it. The
+  // card grows to the LEFT from a fixed right edge, so its final centre sits
+  // half of the expanded width (70rem → 35rem) to the left of that edge.
+  useEffect(() => {
+    const prev = prevExpandedRef.current;
+    prevExpandedRef.current = expandedIndex;
+    if (expandedIndex === null || isMobile()) return;
+    const el = trackRef.current;
+    const child = el?.children[expandedIndex] as HTMLElement | undefined;
+    if (!el || !child) return;
+    const remPx = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    );
+    const cardRect = child.getBoundingClientRect();
+    const containerRect = el.getBoundingClientRect();
+    // The measured right edge is taken while any previously expanded card is
+    // still collapsing (70rem → 28rem). If that card sits to the RIGHT of this
+    // one (lower index in RTL), it will free 42rem and push this card's right
+    // edge back rightward — so add that width back to center on the final spot.
+    let rightEdge = cardRect.right;
+    if (prev !== null && prev < expandedIndex) {
+      rightEdge += (70 - 28) * remPx;
+    }
+    const finalCenter = rightEdge - 35 * remPx;
+    const desiredCenter = containerRect.left + containerRect.width / 2;
+    el.scrollTo({
+      left: el.scrollLeft + (finalCenter - desiredCenter),
+      behavior: "smooth",
+    });
+  }, [expandedIndex]);
 
   return (
     <section id="products" className="flex flex-col">
@@ -125,13 +183,13 @@ export default function Products() {
         </p>
       </div>
 
-      {/* Body: horizontal carousel. On desktop it free-scrolls (LTR) with cards
-          flowing Animals → Horses and the last one cut off at the edge. On
+      {/* Body: horizontal carousel — RTL, so مواشي sits on the right and reads
+          first. On desktop it free-scrolls with cards flowing right → left; on
           mobile it snaps one full-width card at a time. */}
       <div
         ref={trackRef}
         onScroll={handleScroll}
-        dir="ltr"
+        dir="rtl"
         className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-6 py-6 md:flex-1 md:snap-none md:gap-10 md:px-10 md:py-12"
       >
         {products.map((p, i) => (
@@ -139,14 +197,17 @@ export default function Products() {
             key={i}
             {...p}
             isActive={active === i}
+            expanded={expandedIndex === i}
+            onExpand={() => setExpandedIndex(i)}
+            onCollapse={() => setExpandedIndex(null)}
             onSwipe={(dir) => goTo(i + dir)}
           />
         ))}
       </div>
 
-      {/* Dot indicators — mobile only. LTR so the dots line up with the
-          left-to-right carousel instead of reading reversed. */}
-      <div dir="ltr" className="flex justify-center gap-2 pb-2 md:hidden">
+      {/* Dot indicators — mobile only. RTL so the first dot lines up with the
+          right-most (first) card. */}
+      <div dir="rtl" className="flex justify-center gap-2 pb-2 md:hidden">
         {products.map((_, i) => (
           <button
             key={i}

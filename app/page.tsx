@@ -17,8 +17,8 @@ export default function Home() {
       <Testimonials />
       <Contact />
       {/* CTA + footer share one screen on desktop; stack naturally on mobile.
-          The footer slides out from behind the CTA, which sits on top; the
-          wrapper clips whatever hasn't emerged yet. */}
+          As the footer scrolls into view its blocks rise up into place (see
+          Footer.tsx); the wrapper clips anything offset past its edges. */}
       <div className="relative flex flex-col overflow-hidden md:h-screen">
         <CTA />
         <Footer />

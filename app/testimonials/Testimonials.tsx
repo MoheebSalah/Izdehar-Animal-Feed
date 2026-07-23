@@ -84,20 +84,18 @@ export default function Testimonials() {
                 key={t.name}
                 type="button"
                 onClick={() => setSelected(i)}
-                className={`relative min-h-0 w-full overflow-hidden rounded-3xl transition-all duration-300 ${
-                  isActive ? "flex-[2]" : "flex-[1] cursor-pointer"
-                }`}
+                className={`relative min-h-0 w-full overflow-hidden rounded-3xl transition-all duration-300 ${isActive ? "flex-[2]" : "flex-[1] cursor-pointer"
+                  }`}
               >
                 <Image
                   src={t.image}
                   alt={t.name}
                   fill
                   sizes="25rem"
-                  className={`object-cover object-[50%_35%] origin-[50%_35%] transition-all duration-300 ease-out ${
-                    isActive
+                  className={`object-cover object-[50%_35%] origin-[50%_35%] transition-all duration-300 ease-out ${isActive
                       ? "scale-[1.15]"
                       : "brightness-60 hover:brightness-90"
-                  }`}
+                    }`}
                 />
               </button>
             );
@@ -119,22 +117,23 @@ export default function Testimonials() {
           />
 
           {/* Quote text */}
-          <div className="relative z-10 flex flex-1 items-center">
-            <p
-              data-fade
-              className=" text-right font-neo text-[3.5rem] font-bold leading-[1.4] text-text"
-            >
-              {active.quote}
-            </p>
-          </div>
 
-          {/* Name + role */}
-          <div data-fade className="relative z-10 text-right">
-            <p className="font-neo text-[2rem] font-bold text-text">
-              {active.name}
-            </p>
-            <p className="font-neo text-[1.5rem] text-text/50">{active.role}</p>
-          </div>
+            <div className="relative z-10 flex flex-1 items-start ">
+              <p
+                data-fade
+                className=" text-right font-neo text-[2.8rem] font-bold leading-[1.4] text-text"
+              >
+                {active.quote}
+              </p>
+            </div>
+
+            {/* Name + role */}
+            <div data-fade className="relative z-10 text-right">
+              <p className="font-neo text-[2rem] font-bold text-text">
+                {active.name}
+              </p>
+              <p className="font-neo text-[1.5rem] text-text/50">{active.role}</p>
+            </div>
         </div>
       </div>
 
@@ -169,9 +168,8 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <span
               key={t.name}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                selected === i ? "w-6 bg-primary" : "w-2 bg-muted"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${selected === i ? "w-6 bg-primary" : "w-2 bg-muted"
+                }`}
             />
           ))}
         </div>
