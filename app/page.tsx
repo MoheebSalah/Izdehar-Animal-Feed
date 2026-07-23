@@ -16,8 +16,8 @@ export default function Home() {
       <Gallery />
       <Testimonials />
       <Contact />
-      {/* CTA + footer share one screen */}
-      <div className="flex h-screen flex-col">
+      {/* CTA + footer share one screen on desktop; stack naturally on mobile */}
+      <div className="flex flex-col md:h-screen">
         <CTA />
         <Footer />
       </div>

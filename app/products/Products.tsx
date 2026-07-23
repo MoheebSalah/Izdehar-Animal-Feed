@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef, useState } from "react";
 import ProductCard from "../components/ProductCard";
 
 const livestockVarieties = [
@@ -51,52 +54,110 @@ const horseVarieties = [
   { code: "1102", name: "رقائق الذرة" },
 ];
 
+const products = [
+  {
+    image: "/assets/Products/Animals.webp",
+    title: "مواشي",
+    description: "تسمين وحليب للعجول والخراف والماعز",
+    varieties: livestockVarieties,
+  },
+  {
+    image: "/assets/Products/Chickens.webp",
+    title: "دجاج",
+    description: "برامج كاملة للّحم والبيّاض والفرخات",
+    varieties: chickenVarieties,
+  },
+  {
+    image: "/assets/Products/Cows.webp",
+    title: "أبقار TMR",
+    description: "عليقة كاملة جاهزة للأبقار الحلوب",
+    varieties: cowVarieties,
+  },
+  {
+    image: "/assets/Products/Horses.webp",
+    title: "خيول",
+    description: "رقائق شعير وذرة، طاقة سهلة الهضم",
+    varieties: horseVarieties,
+  },
+];
+
 export default function Products() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  // Mobile carousel: track which card is centered so the dots stay in sync.
+  const handleScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    let closest = 0;
+    let min = Infinity;
+    Array.from(el.children).forEach((child, i) => {
+      const dist = Math.abs((child as HTMLElement).offsetLeft - el.scrollLeft);
+      if (dist < min) {
+        min = dist;
+        closest = i;
+      }
+    });
+    setActive(closest);
+  };
+
+  const goTo = (i: number) => {
+    const el = trackRef.current;
+    const child = el?.children[i] as HTMLElement | undefined;
+    if (el && child) el.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+  };
+
   return (
-    <section className="flex  flex-col">
-      {/* Heading: label (right), title (near middle), paragraph (left) */}
-      <div className="flex items-start justify-between px-10 pt-12">
-        <span className="font-neo text-[1.25rem] text-text">منتجاتنا</span>
-        <h2 className="me-20 font-neo text-[2rem] font-bold text-text">
+    <section id="products" className="flex flex-col">
+      {/* Heading: label (right), title (near middle), paragraph (left) on
+          desktop; stacked on mobile. */}
+      <div className="flex flex-col gap-2 px-6 pt-10 md:flex-row md:items-start md:justify-between md:px-10 md:pt-12">
+        <span className="font-neo text-[1rem] text-text md:text-[1.25rem]">
+          منتجاتنا
+        </span>
+        <h2 className="font-neo text-[1.5rem] font-bold text-text md:me-20 md:text-[2rem]">
           علف لكل حيوان، وتركيبة لكل مرحلة
         </h2>
-        <p className="whitespace-nowrap font-neo text-[1.25rem] leading-[1.4] text-text">
-          أبقار، أغنام، دجاج، حبش، وخيول, لكل واحد تركيبته
-          <br />
+        <p className="font-neo text-[0.95rem] leading-[1.4] text-text md:whitespace-nowrap md:text-[1.25rem]">
+          أبقار، أغنام، دجاج، حبش، وخيول, لكل واحد تركيبته{" "}
+          <br className="hidden md:inline" />
           الخاصة. كل اللي بتحتاجه مزرعتك تحت سقف واحد.
         </p>
       </div>
 
-      {/* Body: horizontal carousel (LTR so cards flow Animals → Horses left to
-          right, with the last card cut off at the right edge). */}
+      {/* Body: horizontal carousel. On desktop it free-scrolls (LTR) with cards
+          flowing Animals → Horses and the last one cut off at the edge. On
+          mobile it snaps one full-width card at a time. */}
       <div
+        ref={trackRef}
+        onScroll={handleScroll}
         dir="ltr"
-        className="no-scrollbar flex flex-1 items-stretch gap-10 overflow-x-auto px-10 py-12"
+        className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-6 py-6 md:flex-1 md:snap-none md:gap-10 md:px-10 md:py-12"
       >
-        <ProductCard
-          image="/assets/Products/Animals.webp"
-          title="مواشي"
-          description="تسمين وحليب للعجول والخراف والماعز"
-          varieties={livestockVarieties}
-        />
-        <ProductCard
-          image="/assets/Products/Chickens.webp"
-          title="دجاج"
-          description="برامج كاملة للّحم والبيّاض والفرخات"
-          varieties={chickenVarieties}
-        />
-        <ProductCard
-          image="/assets/Products/Cows.webp"
-          title="أبقار TMR"
-          description="عليقة كاملة جاهزة للأبقار الحلوب"
-          varieties={cowVarieties}
-        />
-        <ProductCard
-          image="/assets/Products/Horses.webp"
-          title="خيول"
-          description="رقائق شعير وذرة، طاقة سهلة الهضم"
-          varieties={horseVarieties}
-        />
+        {products.map((p, i) => (
+          <ProductCard
+            key={i}
+            {...p}
+            isActive={active === i}
+            onSwipe={(dir) => goTo(i + dir)}
+          />
+        ))}
+      </div>
+
+      {/* Dot indicators — mobile only. LTR so the dots line up with the
+          left-to-right carousel instead of reading reversed. */}
+      <div dir="ltr" className="flex justify-center gap-2 pb-2 md:hidden">
+        {products.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`المنتج ${i + 1}`}
+            onClick={() => goTo(i)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              active === i ? "w-6 bg-primary" : "w-2 bg-muted"
+            }`}
+          />
+        ))}
       </div>
     </section>
   );

@@ -28,6 +28,17 @@ export default function LoadingScreen() {
   }, [lenis, done]);
 
   useGSAP(() => {
+    // On mobile the hero video is the bottom half, so the overlay is anchored
+    // to the bottom (see className) and shrinks from the top down to it.
+    // We use half of the *visible* viewport (window.innerHeight) rather than
+    // 50vh, because on mobile browsers `vh` ignores the URL bar and would make
+    // the overlay taller than the actual video. On desktop the video is the
+    // top 70vh and the overlay stays pinned to the top, shrinking from below.
+    const isMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches;
+    const targetHeight = isMobile ? window.innerHeight / 2 : "70vh";
+
     const tl = gsap.timeline({
       onComplete: () => setDone(true),
     });
@@ -55,7 +66,7 @@ export default function LoadingScreen() {
       )
       .to(
         overlayRef.current,
-        { height: "70vh", duration: 0.7, ease: "power3.inOut" },
+        { height: targetHeight, duration: 0.7, ease: "power3.inOut" },
         "<"
       )
       // Background fades away, revealing the hero.
@@ -72,12 +83,12 @@ export default function LoadingScreen() {
     <div
       ref={overlayRef}
       dir="ltr"
-      className="fixed left-0 top-0 z-[100] flex h-screen w-full flex-col items-center justify-center bg-text"
+      className="fixed left-0 top-0 z-[100] flex h-screen w-full flex-col items-center justify-center bg-text max-md:bottom-0 max-md:top-auto"
     >
       <div ref={groupRef} className="flex w-full flex-col items-center">
         <Image
           ref={logoRef}
-          src="/assets/logo.png"
+          src="/assets/logo.webp"
           alt="ازدهار للأعلاف"
           width={347}
           height={485}

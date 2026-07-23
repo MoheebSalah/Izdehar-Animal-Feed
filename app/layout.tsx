@@ -4,6 +4,7 @@ import "./globals.css";
 import "lenis/dist/lenis.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
+import Navbar from "./components/Navbar";
 
 const palestine = localFont({
   src: "../public/fonts/alfont_com_Palestine-Regular.ttf",
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className="min-h-full">
         <SmoothScroll>
           <LoadingScreen />
+          <Navbar />
           {children}
         </SmoothScroll>
       </body>

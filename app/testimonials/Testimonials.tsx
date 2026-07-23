@@ -32,9 +32,26 @@ const testimonials = [
 export default function Testimonials() {
   const [selected, setSelected] = useState(0);
   const active = testimonials[selected];
-  const cardRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const imgTrackRef = useRef<HTMLDivElement>(null);
 
-  // Fade the quote + name in each time the selection changes.
+  // Mobile: swiping the image carousel changes which person (and quote) is shown.
+  const handleImgScroll = () => {
+    const el = imgTrackRef.current;
+    if (!el) return;
+    let closest = 0;
+    let min = Infinity;
+    Array.from(el.children).forEach((child, i) => {
+      const dist = Math.abs((child as HTMLElement).offsetLeft - el.scrollLeft);
+      if (dist < min) {
+        min = dist;
+        closest = i;
+      }
+    });
+    setSelected(closest);
+  };
+
+  // Fade the quote + name in each time the selection changes (both layouts).
   useGSAP(
     () => {
       gsap.fromTo(
@@ -43,17 +60,21 @@ export default function Testimonials() {
         { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.08 }
       );
     },
-    { dependencies: [selected], scope: cardRef }
+    { dependencies: [selected], scope: sectionRef }
   );
 
   return (
-    <section className="flex h-screen flex-col gap-16 px-10 py-12">
-      <h2 className="text-center font-palestine text-[4.5rem] leading-[1.2] text-text">
+    <section
+      id="testimonials"
+      ref={sectionRef}
+      className="flex flex-col gap-8 px-6 py-12 md:h-screen md:gap-16 md:px-10"
+    >
+      <h2 className="text-center font-palestine text-[2.5rem] leading-[1.2] text-text md:text-[4.5rem]">
         ناس جربت... وحكت
       </h2>
 
-      {/* Row: avatars on the right, quote card on the left (RTL: first child = right) */}
-      <div className="flex min-h-0 flex-1 gap-[4rem]">
+      {/* Desktop row: avatars on the right, quote card on the left (RTL: first child = right) */}
+      <div className="hidden min-h-0 flex-1 gap-[4rem] md:flex">
         {/* Avatars column — selected is twice the height of the others */}
         <div className="flex w-[25rem] shrink-0 flex-col gap-5">
           {testimonials.map((t, i) => {
@@ -84,10 +105,7 @@ export default function Testimonials() {
         </div>
 
         {/* Quote card */}
-        <div
-          ref={cardRef}
-          className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] bg-white px-[5rem] py-[4rem]"
-        >
+        <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] bg-white px-[5rem] py-[4rem]">
           {/* Decorative quotation marks */}
           <img
             src="/svgs/”.svg"
@@ -116,6 +134,66 @@ export default function Testimonials() {
               {active.name}
             </p>
             <p className="font-neo text-[1.5rem] text-text/50">{active.role}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: swipe between the images, quote box below updates to match */}
+      <div className="flex flex-col gap-6 md:hidden">
+        {/* Image carousel — one full-width image at a time. LTR so the swipe
+            direction and scroll math are consistent (RTL scrollLeft is flaky). */}
+        <div
+          ref={imgTrackRef}
+          onScroll={handleImgScroll}
+          dir="ltr"
+          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto"
+        >
+          {testimonials.map((t) => (
+            <div
+              key={t.name}
+              className="relative h-[22rem] w-full shrink-0 snap-center overflow-hidden rounded-3xl"
+            >
+              <Image
+                src={t.image}
+                alt={t.name}
+                fill
+                sizes="100vw"
+                className="object-cover object-[50%_35%]"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Dot indicators — LTR to match the carousel */}
+        <div dir="ltr" className="flex justify-center gap-2">
+          {testimonials.map((t, i) => (
+            <span
+              key={t.name}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                selected === i ? "w-6 bg-primary" : "w-2 bg-muted"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Quote box */}
+        <div className="relative overflow-hidden rounded-[1.5rem] bg-white px-6 py-8">
+          <img
+            src="/svgs/”.svg"
+            alt=""
+            className="pointer-events-none absolute right-5 top-0 w-[6rem]"
+          />
+          <p
+            data-fade
+            className="relative z-10 text-right font-neo text-[1.25rem] font-bold leading-[1.4] text-text"
+          >
+            {active.quote}
+          </p>
+          <div data-fade className="relative z-10 mt-4 text-right">
+            <p className="font-neo text-[1.1rem] font-bold text-text">
+              {active.name}
+            </p>
+            <p className="font-neo text-[0.95rem] text-text/50">{active.role}</p>
           </div>
         </div>
       </div>

@@ -29,6 +29,17 @@ html::-webkit-scrollbar {
   display: none; /* Chrome / Safari / Edge */
 }
 
+/*
+  Mobile (< 768px) is laid out from a 390px reference where 1rem = 16px
+  (390 / 16 = 24.375), so `rem` sizes stay proportional on phones instead of
+  collapsing to the tiny desktop scale above.
+*/
+@media (max-width: 767px) {
+  html {
+    font-size: calc(100vw / 24.375);
+  }
+}
+
 body {
   background: #f4f4f4;
   color: var(--color-text);
