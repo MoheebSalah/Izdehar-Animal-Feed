@@ -11,25 +11,34 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
 
-  // Reveal-on-scroll: each footer block starts a little BELOW its final spot and
-  // rises up into place as the footer scrolls into view. The motion is scrubbed
-  // to the scroll (so it tracks the wheel exactly) and lightly staggered, so the
-  // blocks settle one after another for a layered rise. The footer's own
-  // overflow-hidden clips the offset content, making it look like the elements
-  // emerge from the bottom edge. Runs on both desktop and mobile.
+  // Parallax reveal: the footer content sits BEHIND the CTA (which is opaque and
+  // stacked above it) and rises at roughly half the scroll speed. So as the CTA
+  // scrolls up at the normal pace, the content lags behind and appears to slide
+  // out from under it. It starts pulled UP by half the footer's height — about
+  // half of it tucked behind the CTA on the first frame — and eases down to its
+  // resting spot as the footer fills the screen. The motion is scrubbed to the
+  // scroll and moves as one block. Runs on both desktop and mobile.
   useGSAP(
     () => {
       const items = gsap.utils.toArray<HTMLElement>(
         "[data-footer-item]",
         footerRef.current
       );
+      // Half the footer height: this both tucks ~half the content behind the CTA
+      // at the start and, since the scrub spans one footer height, makes the
+      // content rise at ~half the scroll speed (the slower-than-scroll parallax).
+      const hidden = () => -(footerRef.current?.offsetHeight ?? 0) * 0.35;
+      // Commit the start offset now. useGSAP runs in a layout effect (before the
+      // browser paints), so the content is already pushed up behind the CTA on
+      // the very first frame — otherwise the footer paints once at its natural
+      // position before the scrubbed trigger moves it, which reads as a lag.
+      gsap.set(items, { y: hidden });
       gsap.fromTo(
         items,
-        { y: () => (footerRef.current?.offsetHeight ?? 0) * 0.15 },
+        { y: hidden },
         {
           y: 0,
           ease: "none",
-          stagger: 0.12,
           scrollTrigger: {
             trigger: footerRef.current,
             start: "top bottom",
