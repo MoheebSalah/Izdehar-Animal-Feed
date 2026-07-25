@@ -50,7 +50,10 @@ export default function ProductCard({
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      onSwipe?.(dx < 0 ? 1 : -1);
+      // RTL carousel: the next card (higher index) sits to the LEFT, so it's
+      // reached by dragging the strip to the right (dx > 0) — matching the
+      // native swipe used outside the list. A left drag (dx < 0) goes back.
+      onSwipe?.(dx < 0 ? -1 : 1);
     }
   };
 
