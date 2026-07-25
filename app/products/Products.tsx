@@ -91,9 +91,6 @@ export default function Products() {
   // Only one card is ever expanded — the parent owns which, so opening one
   // closes any other. `null` = all collapsed.
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  // The previously expanded card, so the centering below can account for it
-  // still collapsing while the new one expands.
-  const prevExpandedRef = useRef<number | null>(null);
 
   // Track which card is centered (dots + mobile). Uses screen-space rects so it
   // works in either direction — the carousel is RTL, where scrollLeft is
@@ -133,13 +130,18 @@ export default function Products() {
 
   // When a card expands on desktop, pan the carousel so the (now wide) card
   // ends up centered — this keeps it from growing off the edge of the screen.
-  // We solve for the final scroll offset up front and animate to it immediately,
-  // so the pan runs *together* with the width growth instead of after it. The
-  // card grows to the LEFT from a fixed right edge, so its final centre sits
-  // half of the expanded width (70rem → 35rem) to the left of that edge.
+  // The card grows to the LEFT from a fixed right edge over ~300ms, so its final
+  // centre sits half of the expanded width (70rem → 35rem) left of that edge.
+  //
+  // We can't just scrollTo() the target: a one-shot smooth scroll clamps its
+  // destination to the scrollable range *at call time*, but the track hasn't
+  // widened yet (the card is still 28rem), so a large leftward pan gets clamped
+  // short and the card lands off-centre. Instead we ease the scroll frame by
+  // frame: each tick re-measures the (stable) right edge and nudges toward the
+  // centre, so as the scroll range grows with the card the pan converges on the
+  // true spot. Measuring live each frame also absorbs a previously-expanded card
+  // collapsing to the right — no fixed correction needed.
   useEffect(() => {
-    const prev = prevExpandedRef.current;
-    prevExpandedRef.current = expandedIndex;
     if (expandedIndex === null || isMobile()) return;
     const el = trackRef.current;
     const child = el?.children[expandedIndex] as HTMLElement | undefined;
@@ -147,22 +149,21 @@ export default function Products() {
     const remPx = parseFloat(
       getComputedStyle(document.documentElement).fontSize
     );
-    const cardRect = child.getBoundingClientRect();
-    const containerRect = el.getBoundingClientRect();
-    // The measured right edge is taken while any previously expanded card is
-    // still collapsing (70rem → 28rem). If that card sits to the RIGHT of this
-    // one (lower index in RTL), it will free 42rem and push this card's right
-    // edge back rightward — so add that width back to center on the final spot.
-    let rightEdge = cardRect.right;
-    if (prev !== null && prev < expandedIndex) {
-      rightEdge += (70 - 28) * remPx;
-    }
-    const finalCenter = rightEdge - 35 * remPx;
-    const desiredCenter = containerRect.left + containerRect.width / 2;
-    el.scrollTo({
-      left: el.scrollLeft + (finalCenter - desiredCenter),
-      behavior: "smooth",
-    });
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const cardRect = child.getBoundingClientRect();
+      const containerRect = el.getBoundingClientRect();
+      const finalCenter = cardRect.right - 35 * remPx;
+      const desiredCenter = containerRect.left + containerRect.width / 2;
+      const delta = finalCenter - desiredCenter;
+      el.scrollLeft += delta * 0.2;
+      if (now - start < 500 && Math.abs(delta) > 1) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [expandedIndex]);
 
   return (
