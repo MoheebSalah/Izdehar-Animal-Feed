@@ -10,13 +10,11 @@ A single-page marketing site for **Izdehar Animal Feed**, a Palestinian animal f
 
 ## ✨ Features
 
-- **Full RTL Arabic layout** — `dir="rtl"` at the document root, with custom Arabic display and body typefaces loaded locally through `next/font/local`.
-- **Smooth scrolling** — [Lenis](https://lenis.darkroom.engineering/) drives the scroll, with browser scroll restoration disabled before hydration so the page always opens at the top.
-- **Scroll-triggered animation** — [GSAP](https://gsap.com/) + ScrollTrigger power the parallax collage, the footer reveal, and the section entrances.
-- **Interactive product explorer** — swipeable/draggable category cards covering the full catalogue: livestock, poultry, dairy cattle, and horse feed.
-- **Parallax image gallery** — a rotated, layered photo collage whose pieces move at independent speeds on desktop, with a dedicated mobile layout.
-- **Animated loading screen** — a branded intro that plays before the hero is revealed.
-- **Testimonials, contact form, and map** section with an adaptive desktop/mobile ordering.
+- **Full RTL Arabic layout** 
+- **Smooth scrolling** — [Lenis](https://lenis.darkroom.engineering/) 
+- **Scroll-triggered animation** — [GSAP](https://gsap.com/) + ScrollTrigger power the parallax collage.
+- **Parallax image gallery**
+- **Animated loading screen**
 - **Responsive from a fixed design canvas** — the Figma source targets a MacBook Pro 16" (1728×1117); all type and spacing are expressed in `rem` so the layout scales cleanly across desktop sizes, with tailored mobile breakpoints.
 
 ## 🛠 Tech Stack
@@ -68,12 +66,6 @@ public/
 | Light | `#84908a` |
 | Muted | `#a6a7a7` |
 
-Conventions used across the codebase:
-
-- Tailwind utility classes only — no inline styles and no CSS modules.
-- Font sizes in `rem`, converted from the Figma pixel values at the design canvas width.
-- All text uses a `1.4` line height (`leading-[1.4]`).
-- Copy is written directly into the markup rather than pulled from a content file.
 
 ## 🚀 Getting Started
 
@@ -104,17 +96,11 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 ## 🚢 Deployment
 
-The site is deployed on **Vercel** at [izfeed.vercel.app](https://izfeed.vercel.app). Pushes to `main` trigger an automatic production deployment; pull requests get their own preview URLs.
+- The site is deployed on **Vercel** at [izfeed.vercel.app](https://izfeed.vercel.app). Pushes to `main` trigger an automatic production deployment; pull requests get their own preview URLs.
+- It's also deployed on [izdeharfeed.com](https://www.izdeharfeed.com/), but there are some modifications.
+
 
 ## 🤖 Built With Claude
 
 This project was developed with the help of **[Claude](https://claude.com/claude-code)** (Anthropic). Claude Code was used throughout as a pair-programming assistant — translating the Figma design into responsive Tailwind markup, implementing the GSAP scroll animations, and refining the RTL layout. Project-specific conventions for the assistant are documented in [`CLAUDE.md`](CLAUDE.md) and [`AGENTS.md`](AGENTS.md). All code was reviewed and tested before being committed.
 
-## 👤 Author
-
-**Moheeb Salah**
-GitHub: [@MoheebSalah](https://github.com/MoheebSalah)
-
-## 📄 License
-
-No open-source license is attached to this repository, so the work is under standard copyright. Brand assets, photography, and copy belong to Izdehar Animal Feed. Please get in touch before reusing any part of it.
