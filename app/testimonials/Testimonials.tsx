@@ -121,7 +121,7 @@ export default function Testimonials() {
             <div className="relative z-10 flex flex-1 items-start ">
               <p
                 data-fade
-                className=" text-right font-neo text-[2.8rem] font-bold leading-[1.4] text-text"
+                className=" text-right font-neo text-[2.4rem] font-bold leading-[1.4] text-text"
               >
                 {active.quote}
               </p>
@@ -129,10 +129,10 @@ export default function Testimonials() {
 
             {/* Name + role */}
             <div data-fade className="relative z-10 text-right">
-              <p className="font-neo text-[2rem] font-bold text-text">
+              <p className="font-neo text-[1.75rem] font-bold text-text">
                 {active.name}
               </p>
-              <p className="font-neo text-[1.5rem] text-text/50">{active.role}</p>
+              <p className="font-neo text-[1.25rem] text-text/50">{active.role}</p>
             </div>
         </div>
       </div>
@@ -183,15 +183,15 @@ export default function Testimonials() {
           />
           <p
             data-fade
-            className="relative z-10 text-right font-neo text-[1.25rem] font-bold leading-[1.4] text-text"
+            className="relative z-10 text-right font-neo text-[1.1rem] font-bold leading-[1.4] text-text"
           >
             {active.quote}
           </p>
           <div data-fade className="relative z-10 mt-4 text-right">
-            <p className="font-neo text-[1.1rem] font-bold text-text">
+            <p className="font-neo text-[1rem] font-bold text-text">
               {active.name}
             </p>
-            <p className="font-neo text-[0.95rem] text-text/50">{active.role}</p>
+            <p className="font-neo text-[0.85rem] text-text/50">{active.role}</p>
           </div>
         </div>
       </div>

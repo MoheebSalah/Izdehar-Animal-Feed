@@ -32,6 +32,11 @@ export default function Navbar() {
     lenis?.scrollTo(target, { offset: -90 });
   };
 
+  const goTop = () => {
+    setOpen(false);
+    lenis?.scrollTo(0);
+  };
+
   return (
     <>
       {/* Tap-away backdrop for the mobile menu — kept OUTSIDE the header, whose
@@ -47,11 +52,13 @@ export default function Navbar() {
         />
       )}
 
+      {/* pointer-events-none on the header (and on the nav row) so the empty gaps
+          of the top strip — including everything under the blur scrim — stay
+          click-through to the page below (e.g. a product card's ✕). Only the
+          actual controls re-enable pointer events. */}
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        hidden
-          ? "pointer-events-none -translate-y-full opacity-0"
-          : "translate-y-0 opacity-100"
+        className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        hidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
       {/* Legibility scrim: a frosted "glassmorphism" pane — a strong, saturated
@@ -66,7 +73,7 @@ export default function Navbar() {
 
       <nav className="flex items-center justify-between px-6 py-4 md:px-10 md:py-6">
         {/* Right side (RTL): desktop links box */}
-        <div className="hidden items-center gap-6 rounded-xl bg-white px-6 py-2  md:flex">
+        <div className="pointer-events-auto hidden items-center gap-6 rounded-xl bg-white px-6 py-2  md:flex">
           {links.map((l) => (
             <button
               key={l.target}
@@ -85,7 +92,7 @@ export default function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-label="القائمة"
           aria-expanded={open}
-          className="flex h-11 w-11 flex-col items-center justify-center gap-[0.3rem] rounded-xl bg-white shadow-[0_10px_40px_rgba(0,15,7,0.08)] md:hidden"
+          className="pointer-events-auto flex h-11 w-11 flex-col items-center justify-center gap-[0.3rem] rounded-xl bg-white shadow-[0_10px_40px_rgba(0,15,7,0.08)] md:hidden"
         >
           <span
             className={`h-[0.15rem] w-[1.4rem] rounded-full bg-text transition-all duration-300 ${
@@ -106,11 +113,15 @@ export default function Navbar() {
 
         {/* Left side (RTL): logo — icon + wordmark as two parts (dir=ltr keeps
             the icon on the left of the text). The intro's logo flies to these
-            exact positions, so they carry ids the LoadingScreen measures. */}
-        <div
+            exact positions, so they carry ids the LoadingScreen measures.
+            Clicking it scrolls back to the top of the page. */}
+        <button
           id="nav-logo"
+          type="button"
           dir="ltr"
-          className="flex items-center gap-[0.45rem] md:gap-[0.55rem]"
+          onClick={goTop}
+          aria-label="العودة إلى أعلى الصفحة"
+          className="pointer-events-auto flex cursor-pointer items-center gap-[0.45rem] md:gap-[0.55rem]"
         >
           <img
             id="nav-logo-icon"
@@ -124,14 +135,14 @@ export default function Navbar() {
             alt="ازدهار للأعلاف"
             className="h-[1.65rem] w-auto md:h-[2.05rem]"
           />
-        </div>
+        </button>
       </nav>
 
       {/* Mobile dropdown menu */}
       <div
         className={`absolute right-6 top-[4.5rem] origin-top-right transition-all duration-300 md:hidden ${
           open
-            ? "scale-100 opacity-100"
+            ? "pointer-events-auto scale-100 opacity-100"
             : "pointer-events-none scale-95 opacity-0"
         }`}
       >

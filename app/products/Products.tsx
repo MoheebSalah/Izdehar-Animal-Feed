@@ -119,6 +119,47 @@ export default function Products() {
     );
   };
 
+  // Desktop: click-and-drag the track sideways like a physical shelf. Touch is
+  // left alone — the browser's native swipe + snap already handles it.
+  const drag = useRef({ startX: 0, startScroll: 0, moved: false });
+  const [dragging, setDragging] = useState(false);
+
+  // The move/up listeners live on the window rather than on the track: pointer
+  // capture would retarget the compatibility mouse events to the track, so a
+  // plain click would land on the track instead of the card and never expand it.
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = trackRef.current;
+    if (!el || e.pointerType !== "mouse" || isMobile()) return;
+    drag.current = { startX: e.clientX, startScroll: el.scrollLeft, moved: false };
+    setDragging(true);
+
+    const onMove = (ev: PointerEvent) => {
+      const dx = ev.clientX - drag.current.startX;
+      // Only past a few pixels is it a drag — below that it's a click, and the
+      // card must stay clickable.
+      if (Math.abs(dx) > 5) drag.current.moved = true;
+      if (drag.current.moved) el.scrollLeft = drag.current.startScroll - dx;
+    };
+    const onUp = () => {
+      setDragging(false);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+  };
+
+  // A drag that ends over a card would otherwise fire that card's click and
+  // expand it — swallow the click in the capture phase when we actually moved.
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (!drag.current.moved) return;
+    drag.current.moved = false;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const goTo = (i: number) => {
     const child = trackRef.current?.children[i] as HTMLElement | undefined;
     child?.scrollIntoView({
@@ -171,13 +212,13 @@ export default function Products() {
       {/* Heading: label (right), title (near middle), paragraph (left) on
           desktop; stacked on mobile. */}
       <div className="flex flex-col gap-2 px-6 pt-10 md:flex-row md:items-start md:justify-between md:px-10 md:pt-12">
-        <span className="font-neo text-[1rem] text-text md:text-[1.25rem]">
+        <span className="font-neo text-[1rem] text-text md:text-[1.1rem]">
           منتجاتنا
         </span>
-        <h2 className="font-neo text-[1.5rem] font-bold text-text md:me-20 md:text-[2rem]">
+        <h2 className="font-neo text-[1.2rem] font-bold text-text md:me-20 md:text-[1.6rem]">
           علف لكل حيوان، وتركيبة لكل مرحلة
         </h2>
-        <p className="font-neo text-[0.95rem] leading-[1.4] text-text md:whitespace-nowrap md:text-[1.25rem]">
+        <p className="font-neo text-[0.95rem] leading-[1.4] text-text md:whitespace-nowrap md:text-[1.1rem]">
           أبقار، أغنام، دجاج، حبش، وخيول, لكل واحد تركيبته{" "}
           <br className="hidden md:inline" />
           الخاصة. كل اللي بتحتاجه مزرعتك تحت سقف واحد.
@@ -190,8 +231,14 @@ export default function Products() {
       <div
         ref={trackRef}
         onScroll={handleScroll}
+        onPointerDown={onPointerDown}
+        onClickCapture={onClickCapture}
+        // Keeps the browser's native image-drag from stealing the gesture.
+        onDragStart={(e) => e.preventDefault()}
         dir="rtl"
-        className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-6 py-6 md:flex-1 md:snap-none md:gap-10 md:px-10 md:py-12"
+        className={`no-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-6 py-6 md:flex-1 md:snap-none md:gap-10 md:cursor-grab md:px-10 md:py-12 ${
+          dragging ? "select-none md:cursor-grabbing md:**:cursor-grabbing" : ""
+        }`}
       >
         {products.map((p, i) => (
           <ProductCard
