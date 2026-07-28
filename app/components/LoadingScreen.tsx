@@ -136,11 +136,18 @@ export default function LoadingScreen() {
 
   return (
     <>
-      {/* Dark background — shrinks to the hero video height, then fades. */}
+      {/* Dark background — shrinks to the hero video height, then fades.
+          Mobile anchors it to the BOTTOM (that's where the video is), so its
+          height alone decides how far up it reaches. `100vh` is the wrong unit
+          for that job: some mobile browsers resolve it against the viewport
+          with the URL bar still showing, which is shorter than what you can
+          actually see, leaving a sliver of the page uncovered along the top.
+          `100lvh` is by definition the tallest the viewport ever gets, so a
+          bottom-anchored box of that height always reaches past the top edge. */}
       <div
         ref={overlayRef}
         dir="ltr"
-        className="fixed left-0 top-0 z-[100] h-screen w-full bg-text max-md:bottom-0 max-md:top-auto"
+        className="fixed left-0 top-0 z-[100] h-screen w-full bg-text max-md:bottom-0 max-md:top-auto max-md:h-lvh"
       />
 
       {/* Stage — viewport-centered so the background's shrink never nudges it;

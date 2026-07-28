@@ -104,56 +104,67 @@ export default function Gallery() {
         </StickyTitle>
 
         {/* Images — all below the title, deliberately uneven: sides repeat,
-            gaps vary and neighbours overlap at the corners */}
-        <GalleryImage
-          src="/assets/Image Gallery/Image 5.webp"
-          alt="مخزن الأعلاف والقش"
-          rotation={6}
-          speed={40}
-          className="left-[1.5rem] top-[13rem] h-[13rem] w-[10rem] z-20"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 2.webp"
-          alt="بقرة تأكل العلف"
-          rotation={-9}
-          speed={60}
-          className="right-[0.5rem] top-[21rem] h-[9rem] w-[13rem] z-30"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 4.webp"
-          alt="مختبر الجودة في مصنع ازدهار"
-          rotation={4}
-          speed={35}
-          className="right-[2.5rem] top-[31.5rem] h-[8.5rem] w-[12rem] z-10"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 1.webp"
-          alt="حبيبات العلف تنسكب"
-          rotation={-5}
-          speed={55}
-          className="left-[0.5rem] top-[37rem] h-[11rem] w-[14rem] z-30"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 3.webp"
-          alt="يدان تحملان حبيبات العلف"
-          rotation={-13}
-          speed={30}
-          className="left-[3rem] top-[49rem] h-[11rem] w-[10rem] z-10"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 7.webp"
-          alt="مصنع ازدهار وصوامع الحبوب"
-          rotation={7}
-          speed={65}
-          className="right-[1rem] top-[56rem] h-[9rem] w-[12rem] z-20"
-        />
-        <GalleryImage
-          src="/assets/Image Gallery/Image 6.webp"
-          alt="مبنى مصنع ازدهار للأعلاف"
-          rotation={-3}
-          speed={45}
-          className="left-[1.5rem] top-[66rem] h-[12.5rem] w-[10.5rem] z-30"
-        />
+            gaps vary and neighbours overlap at the corners.
+
+            Wrapped in a horizontal clip. GSAP tilts each image, and a rotated
+            box is wider than its layout box (w·cos + h·sin), so an image set
+            flush to the edge pokes a corner off-screen and hands the page a
+            sideways scroll. The insets below already keep every bounding box
+            inside the viewport — this layer is the guard that keeps it that way.
+            `clip` rather than `hidden` so it adds no scroll container and leaves
+            the vertical parallax free. The title stays OUTSIDE it: it goes
+            `position: fixed` while stuck, which a clipping ancestor could cut. */}
+        <div className="absolute inset-0 overflow-x-clip">
+          <GalleryImage
+            src="/assets/Image Gallery/Image 5.webp"
+            alt="مخزن الأعلاف والقش"
+            rotation={6}
+            speed={40}
+            className="left-[1.5rem] top-[13rem] h-[13rem] w-[10rem] z-20"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 2.webp"
+            alt="بقرة تأكل العلف"
+            rotation={-9}
+            speed={60}
+            className="right-[1.25rem] top-[21rem] h-[9rem] w-[13rem] z-30"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 4.webp"
+            alt="مختبر الجودة في مصنع ازدهار"
+            rotation={4}
+            speed={35}
+            className="right-[2.5rem] top-[31.5rem] h-[8.5rem] w-[12rem] z-10"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 1.webp"
+            alt="حبيبات العلف تنسكب"
+            rotation={-5}
+            speed={55}
+            className="left-[1rem] top-[37rem] h-[11rem] w-[14rem] z-30"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 3.webp"
+            alt="يدان تحملان حبيبات العلف"
+            rotation={-13}
+            speed={30}
+            className="left-[3rem] top-[49rem] h-[11rem] w-[10rem] z-10"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 7.webp"
+            alt="مصنع ازدهار وصوامع الحبوب"
+            rotation={7}
+            speed={65}
+            className="right-[1.25rem] top-[56rem] h-[9rem] w-[12rem] z-20"
+          />
+          <GalleryImage
+            src="/assets/Image Gallery/Image 6.webp"
+            alt="مبنى مصنع ازدهار للأعلاف"
+            rotation={-3}
+            speed={45}
+            className="left-[1.5rem] top-[66rem] h-[12.5rem] w-[10.5rem] z-30"
+          />
+        </div>
       </div>
     </section>
   );
