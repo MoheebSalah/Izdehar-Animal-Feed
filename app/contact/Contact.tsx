@@ -15,18 +15,34 @@ export default function Contact() {
         {/* Row: map right / form left on desktop; on mobile the form is on top
             and the map below it (map is the DOM-first child, so orders swap). */}
         <div className="mt-8 flex flex-col gap-8 md:mt-[2.5rem] md:flex-row md:gap-[3rem]">
-          {/* Map — below the form on mobile, 0.75 of the section height on desktop.
-              flex-1 is desktop-only: in the mobile column it would zero out the
-              height via flex-basis and hide the map. */}
-          <div className="relative order-2 h-[24rem] overflow-hidden rounded-[1.5rem] md:order-1 md:h-[60vh] md:flex-1">
+          {/* Map — the whole image opens the factory's exact spot on Google
+              Maps. Below the form on mobile, 0.75 of the section height on
+              desktop. flex-1 is desktop-only: in the mobile column it would zero
+              out the height via flex-basis and hide the map. */}
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=31.59075,34.9866944"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative order-2 block h-[24rem] overflow-hidden rounded-[1.5rem] md:order-1 md:h-[60vh] md:flex-1"
+          >
             <Image
-              src="/photos/map_placeholder.webp"
+              src="/assets/map.png"
               alt="موقع مصنع ازدهار على الخريطة"
               fill
               sizes="50vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-          </div>
+
+            {/* Note — bottom left corner of the map */}
+            <span className="absolute bottom-[1rem] left-[1rem] flex items-center gap-2 rounded-full bg-white px-5 py-3 font-neo text-[1rem] leading-[1.4] text-text shadow-lg transition-transform duration-300 group-hover:scale-[1.03] md:bottom-[1.5rem] md:left-[1.5rem] md:text-[1.125rem]">
+              <img
+                src="/svgs/location.svg"
+                alt=""
+                className="h-[1.1rem] w-auto md:h-[1.25rem]"
+              />
+              افتح في خرائط جوجل
+            </span>
+          </a>
 
           {/* Form — on top on mobile; same height as the map on desktop */}
           <form className="order-1 flex flex-col md:order-2 md:h-[60vh] md:flex-1">
