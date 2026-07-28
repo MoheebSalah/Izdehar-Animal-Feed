@@ -212,13 +212,13 @@ export default function Products() {
       {/* Heading: label (right), title (near middle), paragraph (left) on
           desktop; stacked on mobile. */}
       <div className="flex flex-col gap-2 px-6 pt-10 md:flex-row md:items-start md:justify-between md:px-10 md:pt-12">
-        <span className="font-neo text-[1rem] text-text md:text-[1.25rem]">
+        <span className="font-neo text-[1rem] text-text md:text-[1.1rem]">
           منتجاتنا
         </span>
-        <h2 className="font-neo text-[1.5rem] font-bold text-text md:me-20 md:text-[2rem]">
+        <h2 className="font-neo text-[1.2rem] font-bold text-text md:me-20 md:text-[1.6rem]">
           علف لكل حيوان، وتركيبة لكل مرحلة
         </h2>
-        <p className="font-neo text-[0.95rem] leading-[1.4] text-text md:whitespace-nowrap md:text-[1.25rem]">
+        <p className="font-neo text-[0.95rem] leading-[1.4] text-text md:whitespace-nowrap md:text-[1.1rem]">
           أبقار، أغنام، دجاج، حبش، وخيول, لكل واحد تركيبته{" "}
           <br className="hidden md:inline" />
           الخاصة. كل اللي بتحتاجه مزرعتك تحت سقف واحد.

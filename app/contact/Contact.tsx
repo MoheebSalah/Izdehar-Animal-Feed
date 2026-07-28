@@ -49,17 +49,17 @@ export default function Contact() {
             {/* Name fields */}
             <div className="grid grid-cols-2 gap-5">
               <div>
-                <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.5rem]">
+                <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.25rem]">
                   الاسم الأول
                 </label>
                 <input
                   type="text"
                   placeholder="مثال: خالد"
-                  className="w-full rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted"
+                  className="w-full rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1rem] text-text placeholder:text-muted"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.5rem]">
+                <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.25rem]">
                   اسم العائلة
                 </label>
                 <input
@@ -72,19 +72,19 @@ export default function Contact() {
 
             {/* Message — grows to fill the space between the fields and the contacts */}
             <div className="mt-5 flex flex-1 flex-col">
-              <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.5rem]">
+              <label className="mb-2 block text-right font-neo text-[1.1rem] font-semibold text-text md:text-[1.25rem]">
                 الرسالة
               </label>
               <textarea
                 placeholder="احكِ لنا عن مزرعتك وشو بتحتاج..."
-                className="w-full flex-1 resize-none rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1.125rem] text-text placeholder:text-muted min-h-[10rem] md:min-h-0"
+                className="w-full flex-1 resize-none rounded-2xl bg-[#ededed] px-5 py-4 text-right font-neo text-[1rem] text-text placeholder:text-muted min-h-[10rem] md:min-h-0"
               />
             </div>
 
             {/* Submit */}
             <button
               type="submit"
-              className="group mt-5 flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-text py-4 font-neo text-[1.125rem] text-white transition-transform duration-300 hover:scale-[1.03]"
+              className="group mt-5 flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-text py-4 font-neo text-[1rem] text-white transition-transform duration-300 hover:scale-[1.03]"
             >
               أرسل رسالتك
               {/* Two arrows in a mask: the current one flies out toward the top-left
@@ -120,7 +120,7 @@ export default function Contact() {
             <div className="mt-auto grid grid-cols-1 gap-4 pt-8 md:grid-cols-2 md:gap-5 md:pt-[2.5rem]">
               {/* Right column */}
               <div className="space-y-4">
-                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.5rem]">
+                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.25rem]">
                   <img
                     src="/svgs/location.svg"
                     alt=""
@@ -128,7 +128,7 @@ export default function Contact() {
                   />
                   <span>ترقوميا، الخليل، فلسطين</span>
                 </div>
-                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.5rem]">
+                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.25rem]">
                   <img
                     src="/svgs/mail.svg"
                     alt=""
@@ -139,7 +139,7 @@ export default function Contact() {
               </div>
               {/* Left column */}
               <div className="space-y-4">
-                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.5rem]">
+                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.25rem]">
                   <img
                     src="/svgs/phone.svg"
                     alt=""
@@ -147,7 +147,7 @@ export default function Contact() {
                   />
                   <span dir="ltr">+972 2 22233222</span>
                 </div>
-                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.5rem]">
+                <div className="flex items-center gap-3 font-neo text-[1.1rem] text-text md:gap-2 md:text-[1.25rem]">
                   <img
                     src="/svgs/mobile.svg"
                     alt=""

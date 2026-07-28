@@ -5,9 +5,12 @@ import StickyTitle from "../components/StickyTitle";
 export default function Gallery() {
   return (
     <section className="relative h-[87rem] w-full overflow-visible md:h-[122rem]">
-      {/* Desktop collage — authored on a 108rem-wide canvas (= 100vw at the
-          design scale). Hidden on mobile, which gets its own layout below. */}
-      <div className="absolute left-0 top-0 hidden h-[122rem] w-[108rem] md:block">
+      {/* Desktop collage — authored on a 108rem-wide canvas (= the full design
+          width). Centred rather than pinned left, because on a short, wide
+          screen the root font-size scales off the height instead (see
+          globals.css) and the canvas ends up narrower than the viewport.
+          Hidden on mobile, which gets its own layout below. */}
+      <div className="absolute inset-x-0 top-0 mx-auto hidden h-[122rem] w-[108rem] md:block">
       {/* Hay storage shed — top, above the image it overlaps */}
       <GalleryImage
         src="/assets/Image Gallery/Image 5.webp"

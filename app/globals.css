@@ -16,11 +16,19 @@
 
 /*
   Root font-size scales with the viewport so every `rem` stays proportional
-  across desktop screens. 1rem = 16px on the 1728px Figma design width
-  (1728 / 16 = 108).
+  across desktop screens. Two references are measured and the tighter one wins,
+  the way `object-fit: contain` picks a scale:
+    - width  — 1rem = 16px at the 1728px Figma design width (1728 / 16 = 108)
+    - height — 1rem = 16px at a 960px tall browser viewport (960 / 16 = 60),
+               which is what the 1117px design screen leaves after browser chrome
+  Width alone is not enough: a short, wide screen such as 1920x1080 scales text
+  up off its width while every `vh`-sized section gets shorter, so the page reads
+  oversized and cramped. Taking the minimum keeps text in step with the sections
+  that hold it — `vh` boxes stay a constant number of rem whenever height is the
+  binding side. The last term stops very large monitors from growing forever.
 */
 html {
-  font-size: calc(100vw / 108);
+  font-size: min(100vw / 108, 100vh / 60, 22px);
   /* Hide the page scrollbar while keeping scroll functional */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE / old Edge */

@@ -86,35 +86,35 @@ export default function Footer() {
             >
               {/* الشركة (right) */}
               <div className="flex flex-col gap-3 text-right">
-                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.5rem]">
+                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.25rem]">
                   الشركة
                 </h3>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   من نحن
                 </a>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   منتجاتنا
                 </a>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   تواصل معنا
                 </a>
               </div>
 
               {/* منتجاتنا */}
               <div className="flex flex-col gap-3 text-right">
-                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.5rem]">
+                <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.25rem]">
                   منتجاتنا
                 </h3>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   أعلاف مواشي
                 </a>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   دجاج لاحم
                 </a>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   دجاج بيّاض
                 </a>
-                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.5rem]">
+                <a href="#" className="font-neo text-[1.1rem] text-white/70 md:text-[1.25rem]">
                   المزيد
                 </a>
               </div>
@@ -122,13 +122,13 @@ export default function Footer() {
               {/* Contact info (left) — fixed-width icon column keeps all icons and
                   text starts aligned. Spans both grid columns on mobile. */}
               <div className="col-span-2 flex flex-col items-start gap-4 md:col-auto">
-                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.25rem]">
                   <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img src="/svgs/phone.svg" alt="" className="h-[1.1rem] w-auto md:h-[1.5rem]" />
                   </span>
                   <span dir="ltr">+972 2 22233222</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.25rem]">
                   <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img
                       src="/svgs/location.svg"
@@ -138,7 +138,7 @@ export default function Footer() {
                   </span>
                   <span>ترقوميا، الخليل، فلسطين</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.25rem]">
                   <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img
                       src="/svgs/mobile.svg"
@@ -148,7 +148,7 @@ export default function Footer() {
                   </span>
                   <span dir="ltr">+972 562242003</span>
                 </div>
-                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.5rem]">
+                <div className="flex items-center gap-2 font-neo text-[1.1rem] text-white md:text-[1.25rem]">
                   <span className="flex w-[1.1rem] shrink-0 items-center justify-center md:w-[1.5rem]">
                     <img src="/svgs/mail.svg" alt="" className="h-[1.1rem] w-auto md:h-[1.5rem]" />
                   </span>
