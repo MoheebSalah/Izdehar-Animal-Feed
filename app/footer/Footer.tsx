@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Parallax reveal: the footer content sits BEHIND the CTA (which is opaque and
   // stacked above it) and rises at roughly half the scroll speed. So as the CTA
@@ -18,12 +19,14 @@ export default function Footer() {
   // half of it tucked behind the CTA on the first frame — and eases down to its
   // resting spot as the footer fills the screen. The motion is scrubbed to the
   // scroll and moves as one block. Runs on both desktop and mobile.
+  //
+  // One element is animated, not each block inside it: they all travel by the
+  // same amount, and their shared wrapper carries the same background as the
+  // footer, so moving it alone is indistinguishable — at a quarter of the
+  // per-frame work. The wrapper is layer-promoted in the markup below, which is
+  // what keeps the type from being re-rastered on every frame of the scrub.
   useGSAP(
     () => {
-      const items = gsap.utils.toArray<HTMLElement>(
-        "[data-footer-item]",
-        footerRef.current
-      );
       // Half the footer height: this both tucks ~half the content behind the CTA
       // at the start and, since the scrub spans one footer height, makes the
       // content rise at ~half the scroll speed (the slower-than-scroll parallax).
@@ -32,9 +35,9 @@ export default function Footer() {
       // browser paints), so the content is already pushed up behind the CTA on
       // the very first frame — otherwise the footer paints once at its natural
       // position before the scrubbed trigger moves it, which reads as a lag.
-      gsap.set(items, { y: hidden });
+      gsap.set(contentRef.current, { y: hidden });
       gsap.fromTo(
-        items,
+        contentRef.current,
         { y: hidden },
         {
           y: 0,
@@ -57,15 +60,20 @@ export default function Footer() {
       ref={footerRef}
       className="relative z-10 overflow-hidden bg-text md:flex-1"
     >
-      <div className="flex h-full flex-col bg-text text-white">
+      {/* The block that travels. `will-change-transform` earns it a compositor
+          layer up front: without one the browser re-rasterises all this type on
+          every frame of the scrub, since a translate alone no longer promotes an
+          element in Chrome. Its background matches the footer's, so the footer
+          shows through the strip it vacates. */}
+      <div
+        ref={contentRef}
+        className="flex h-full flex-col bg-text text-white will-change-transform"
+      >
         {/* Main content: logo (right) + lists & paragraph (left) on desktop;
             on mobile the lists stack on top and the logo sits at the end. */}
         <div className="flex flex-col gap-10 px-6 pt-10 md:flex-1 md:flex-row md:justify-between md:gap-0 md:px-10 md:pt-[3rem]">
           {/* Logo — full height on desktop; at the end, centered, on mobile */}
-          <div
-            data-footer-item
-            className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]"
-          >
+          <div className="relative order-2 w-[16rem] shrink-0 max-md:mx-auto max-md:mb-6 max-md:h-[9rem] md:order-1 md:mb-[2rem] md:w-[22rem]">
             <Image
               src="/assets/logo.webp"
               alt="ازدهار للأعلاف"
@@ -80,10 +88,7 @@ export default function Footer() {
           <div className="order-1 flex w-full flex-col justify-between gap-8 md:order-2 md:w-[calc(50%_+_8rem)] md:gap-0 md:pb-[3rem]">
             {/* Lists — two columns of links on mobile with the contact info
                 spanning below; a single row on desktop. */}
-            <div
-              data-footer-item
-              className="grid grid-cols-2 gap-6 md:flex md:justify-between"
-            >
+            <div className="grid grid-cols-2 gap-6 md:flex md:justify-between">
               {/* الشركة (right) */}
               <div className="flex flex-col gap-3 text-right">
                 <h3 className="mb-2 font-neo text-[1.1rem] font-bold text-white md:text-[1.25rem]">
@@ -158,10 +163,7 @@ export default function Footer() {
             </div>
 
             {/* Company description — below the lists, aligned with them */}
-            <p
-              data-footer-item
-              className="font-neo text-[1rem] leading-[1.7] text-white"
-            >
+            <p className="font-neo text-[1rem] leading-[1.7] text-white">
               ازدهار فلسطين للأعلاف، مصنع فلسطيني في ترقوميا، الخليل، بنصنع أعلاف
               متوازنة لكل أنواع الثروة الحيوانية. هدفنا نخفّض كلفة الإنتاج على
               المزارع الفلسطيني ونحلّ العلف المحلي مكان المستورد.
@@ -169,8 +171,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright — rises into place last, from the bottom edge */}
-        <div data-footer-item className="bg-white py-5 text-center">
+        {/* Copyright — the strip the footer's own background shows beneath */}
+        <div className="bg-white py-5 text-center">
           <p className="font-neo text-[0.875rem] text-text">
             © 2026 جميع الحقوق محفوظة لشركة ازدهار فلسطين للأعلاف
           </p>
